@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "195742239074",
+    "project_id": "mycapstonedb",
+    "storage_bucket": "mycapstonedb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195742239074:android:2dbb2ddf6231f7bb6fc43b",
+        "android_client_info": {
+          "package_name": "com.example.csappliedteacherapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "195742239074-4dihrvfbd2vdfahv8qs06rfvgt03dflh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe-uTHRcepuvd--KWtECOJzuf5ZEeVxkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "195742239074-4dihrvfbd2vdfahv8qs06rfvgt03dflh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
