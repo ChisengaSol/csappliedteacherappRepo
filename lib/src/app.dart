@@ -12,6 +12,7 @@ class App extends StatelessWidget {
         value: AuthService().user,
         initialData: null,
         child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Welcome Myapp',
         theme: ThemeData(
           accentColor: Colors.orange,

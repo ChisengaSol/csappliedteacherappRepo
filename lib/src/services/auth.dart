@@ -15,7 +15,7 @@ class AuthService {
     return _auth
         .authStateChanges()
         .map((User user) => _userFromFirebaseUser(user));
-        //.map(_userFromFirebaseUser);
+    //.map(_userFromFirebaseUser);
   }
 
   //sign in anonymous
@@ -31,8 +31,38 @@ class AuthService {
   }
 
   //sing in with email and password
+  Future emailAndPwordSignIn(String email, String pword) async {
+    try {
+      UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(email: email, password: pword);
+      User user = userCredential.user;
+      return _userFromFirebaseUser(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 
   //register with email and password
+  Future emailAndPwordReg(String email, String pword) async {
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: pword);
+      User user = userCredential.user;
+      return _userFromFirebaseUser(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 
   //sign out
+  Future logOut() async {
+    try {
+      return await _auth.signOut();
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 }
