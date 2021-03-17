@@ -1,4 +1,5 @@
 import 'package:csappliedteacherapp/src/models/user.dart';
+import 'package:csappliedteacherapp/src/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -33,8 +34,8 @@ class AuthService {
   //sing in with email and password
   Future emailAndPwordSignIn(String email, String pword) async {
     try {
-      UserCredential userCredential = await _auth
-          .signInWithEmailAndPassword(email: email, password: pword);
+      UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(email: email, password: pword);
       User user = userCredential.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -49,6 +50,10 @@ class AuthService {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: pword);
       User user = userCredential.user;
+
+      //create a document for the user with user uid
+      await DatabaseService(uid: user.uid).updateTutorData(
+          'first name', 'last name', 'gender', 'company', 'bio');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
