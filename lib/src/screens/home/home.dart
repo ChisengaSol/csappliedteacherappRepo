@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csappliedteacherapp/src/models/tutor.dart';
 import 'package:csappliedteacherapp/src/screens/authenticate/login.dart';
 import 'package:csappliedteacherapp/src/screens/home/subject_list.dart';
+import 'package:csappliedteacherapp/src/screens/main_drawer_pages/menu_drawer.dart';
 import 'package:csappliedteacherapp/src/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<QuerySnapshot>.value(
+    return StreamProvider<List<Tutor>>.value(
         value: DatabaseService().tutors,
         initialData: null,
         child: Scaffold(
@@ -27,6 +29,9 @@ class HomeScreen extends StatelessWidget {
               label: Text('Logout'),
             )
           ],
+        ),
+        drawer: Drawer(
+          child: MainDrawer(),
         ),
         body: TutorList(),
       ),

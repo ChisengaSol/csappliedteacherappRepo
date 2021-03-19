@@ -53,7 +53,7 @@ class AuthService {
 
       //create a document for the user with user uid
       await DatabaseService(uid: user.uid).updateTutorData(
-          'first name', 'last name', 'gender', 'company', 'bio');
+          'first name', 'last name', 'gender', 'company','tutor_or_pupil', 'bio');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -69,5 +69,15 @@ class AuthService {
       print(e.toString());
       return null;
     }
+  }
+
+  //get userId
+  Future<String> getCurrentUid() async {
+    return FirebaseAuth.instance.currentUser.uid;
+  }
+
+  //return current user
+  Future getCurrentUser() async {
+    return FirebaseAuth.instance.currentUser;
   }
 }
