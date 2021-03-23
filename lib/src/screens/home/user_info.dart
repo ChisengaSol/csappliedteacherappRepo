@@ -11,9 +11,6 @@ class UserInforTile extends StatelessWidget {
       child: Card(
         margin: EdgeInsets.fromLTRB(20.0, 6.0 , 20.0, 0.0),
         child: ListTile(
-          // leading: CircleAvatar(
-          //   backgroundColor: Colors.black,
-          // ),
           title: Text(theUser.fname),
         ),
       ),

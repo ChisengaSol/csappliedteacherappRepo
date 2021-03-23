@@ -8,55 +8,54 @@ class TeachersList extends StatefulWidget {
 
 //get teachers
 class _TeachersListState extends State<TeachersList> {
+  Future _data;
+
   Future getTeachersForSubject() async {
     var firestore = FirebaseFirestore.instance;
     QuerySnapshot qs = await firestore.collection("teachers").get();
     return qs.docs;
   }
 
+  //to navigate to teacher details
+  navigateToDetails(DocumentSnapshot teacher) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TeacherDetails(
+                  teacher: teacher,
+                )));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _data = getTeachersForSubject();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // return Container(
-    //   child: FutureBuilder(
-    //       future: getTeachersForSubject(),
-    //       builder: (context, snapshot) {
-    //         if (snapshot.connectionState == ConnectionState.waiting) {
-    //           return Center(
-    //             child: Text("Loading..."),
-    //           );
-    //         } else {
-    //           return ListView.builder(
-    //               itemCount: snapshot.data.length,
-    //               itemBuilder: (context, index) {
-    //                 return ListTile(
-    //                   title: Text(snapshot.data()["firstName"]),
-    //                 );
-    //               });
-    //         }
-    //       }),
-    // );
     return Scaffold(
-      floatingActionButton: null,
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('teachers').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return ListView(
-            children: snapshot.data.docs.map((document) {
+      body: Container(
+        child: FutureBuilder(
+          future: _data,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 1.2,
-                  height: MediaQuery.of(context).size.height / 6.0,
-                  child: Text(document['firstName']),
-                ),
+                child: Text("Loading..."),
               );
-            }).toList(),
-          );
-        },
+            } else {
+              return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(snapshot.data[index].data()["firstName"]),
+                      onTap: () => navigateToDetails(snapshot.data[index]),
+                    );
+                  });
+            }
+          },
+        ),
       ),
     );
   }
@@ -77,6 +76,7 @@ class _TeacherDetailsState extends State<TeacherDetails> {
       child: Card(
         child: ListTile(
           title: Text(widget.teacher.data()["firstName"]),
+          subtitle: Text(widget.teacher.data()["lastName"]),
         ),
       ),
     );

@@ -18,30 +18,6 @@ class _TutorListState extends State<TutorList> {
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    // floatingActionButton: null,
-    // body: StreamBuilder(
-    //   stream: FirebaseFirestore.instance.collection('subjects').snapshots(),
-    //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-    //     if(!snapshot.hasData){
-    //       return Center(
-    //         child: CircularProgressIndicator(),
-    //       );
-    //     }
-    //     return ListView(
-    //       children: snapshot.data.docs.map((document){
-    //         return Center(
-    //           child: Container(
-    //             width: MediaQuery.of(context).size.width / 1.2,
-    //             height: MediaQuery.of(context).size.height / 6.0,
-    //             child: Text(document['subject_name']),
-    //           ),
-    //         );
-    //       }).toList(),
-    //     );
-    //   },
-    // ),
-
     //returning list of subjects
     return Container(
       child: FutureBuilder(
@@ -58,7 +34,10 @@ class _TutorListState extends State<TutorList> {
                   return ListTile(
                     title: Text(snapshot.data[index].data()["subject_name"]),
                     onTap: () {
-                     // return TeachersList();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TeachersList()));
                     },
                   );
                 });
