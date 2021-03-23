@@ -12,7 +12,6 @@ class UserSettingsForm extends StatefulWidget {
 
 class _UserSettingsFormState extends State<UserSettingsForm> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> tutorOrPupil = ['Tutor', 'Pupil'];
   final List<String> genders = ['Male', 'Female'];
 
   //form values
@@ -20,7 +19,6 @@ class _UserSettingsFormState extends State<UserSettingsForm> {
   String _currentlname;
   String _currentGender;
   String _currentCompany;
-  String _currentTutor_or_pupil;
   String _currentBio;
 
   @override
@@ -102,23 +100,6 @@ class _UserSettingsFormState extends State<UserSettingsForm> {
                     SizedBox(
                       height: 18.0,
                     ),
-
-                    //tutor or pupil dropdown
-                    DropdownButtonFormField(
-                      decoration: textInputDecoration,
-
-                      //value of the dropdown
-                      //value: _currentTutor_or_pupil ?? userData.tutor_or_pupil,
-                      items: tutorOrPupil.map((status) {
-                        return DropdownMenuItem(
-                          //tracks the value the user selects(male or female)
-                          value: status,
-                          child: Text("$status"),
-                        );
-                      }).toList(),
-                      onChanged: (val) =>
-                          setState(() => _currentTutor_or_pupil = val),
-                    ),
                     TextFormField(
                       initialValue: userData.bio,
                       decoration: textInputDecoration,
@@ -143,7 +124,6 @@ class _UserSettingsFormState extends State<UserSettingsForm> {
                               _currentlname ?? userData.lname,
                               _currentGender ?? userData.gender,
                               _currentCompany ?? userData.company,
-                              _currentTutor_or_pupil ?? userData.tutor_or_pupil,
                               _currentBio ?? userData.bio,
                             );
                             Navigator.pop(context);

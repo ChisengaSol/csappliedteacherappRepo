@@ -1,8 +1,6 @@
 import 'package:csappliedteacherapp/src/screens/main_drawer_pages/favourite_tutor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../authenticate/login.dart';
 import 'info.dart';
 import '../home/my_details_screen.dart';
 
@@ -92,19 +90,19 @@ class MainDrawer extends StatelessWidget {
               );
             }, //currently do nothing when tapped
           ),
-          ListTile(
-            leading: Icon(Icons.arrow_back),
-            title: Text(
-              'Log out',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            // onTap: () {
-            //   auth.signOut();
-            //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LoginScreen()));
-            // } //currently do nothing when tapped
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.arrow_back),
+          //   title: Text(
+          //     'Log out',
+          //     style: TextStyle(
+          //       fontSize: 18,
+          //     ),
+          //   ),
+          //   onTap: () {
+          //     auth.signOut();
+          //     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LoginScreen()));
+          //   } //currently do nothing when tapped
+          // ),
         ],
       ),
     );

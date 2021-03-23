@@ -11,13 +11,12 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('tutors');
 
   Future updateTutorData(String fname, String lname, String gender,
-      String company, String tutorOrPupil, String bio) async {
+      String company, String bio) async {
     return await tutorsCollection.doc(uid).set({
       'fname': fname,
       'lname': lname,
       'gender': gender,
       'company': company,
-      'tutor_or_pupil': tutorOrPupil,
       'bio': bio,
       'userId': uid,
     });
@@ -43,7 +42,6 @@ class DatabaseService {
         lname: e.data()['lname'] ?? '',
         gender: e.data()['gender'] ?? '',
         company: e.data()['company'] ?? '',
-        tutor_or_pupil: e.data()['tutor_or_pupil'] ?? '',
         bio: e.data()['bio'] ?? '',
       );
     }).toList();
@@ -57,7 +55,6 @@ class DatabaseService {
       lname: snapshot.data()['lname'],
       gender: snapshot.data()['gender'],
       company: snapshot.data()['company'],
-      tutor_or_pupil: snapshot.data()['tutor_or_pupil'],
       bio: snapshot.data()['bio'],
     );
   }
@@ -71,4 +68,7 @@ class DatabaseService {
   Stream<UserData> get userData {
     return tutorsCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
+
+  //get user details
+  
 }

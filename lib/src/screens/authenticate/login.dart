@@ -1,9 +1,6 @@
-import 'package:csappliedteacherapp/src/models/user.dart';
-import 'package:csappliedteacherapp/src/screens/home/home.dart';
 import 'package:csappliedteacherapp/src/services/auth.dart';
 import 'package:csappliedteacherapp/src/shared/constants.dart';
 import 'package:csappliedteacherapp/src/shared/loading.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,9 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
-      backgroundColor: Colors.brown[100],
+      //backgroundColor: Colors.blue[100],
       appBar: AppBar(
-        backgroundColor: Colors.brown[400],
+        //backgroundColor: Colors.blue[400],
         elevation: 0.0,
         title: Text('Sign in'),
         actions: <Widget>[
@@ -78,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 20.0,
               ),
               RaisedButton(
-                color: Colors.pink[400],
+                color: Colors.blue[400],
                 child: Text(
                   'Sign in',
                   style: TextStyle(color: Colors.white),

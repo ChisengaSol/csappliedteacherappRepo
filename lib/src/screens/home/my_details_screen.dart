@@ -5,8 +5,6 @@ import 'package:csappliedteacherapp/src/screens/home/tutor_list.dart';
 import 'package:csappliedteacherapp/src/screens/home/user_settingform.dart';
 //import 'package:csappliedteacherapp/src/screens/home/subject_list.dart';
 import 'package:csappliedteacherapp/src/services/database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,12 +33,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
       initialData: null,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("User Details"),
+          title: Text("Username"),
           actions: <Widget>[
             FlatButton.icon(
               onPressed: () => _showSettingsPannel(),
               icon: Icon(Icons.settings),
-              label: Text("Settings"),
+              label: Text("Update"),
             )
           ],
         ),

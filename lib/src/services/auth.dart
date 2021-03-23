@@ -53,7 +53,7 @@ class AuthService {
 
       //create a document for the user with user uid
       await DatabaseService(uid: user.uid).updateTutorData(
-          'first name', 'last name', 'gender', 'company','tutor_or_pupil', 'bio');
+          'first name', 'last name', 'gender', 'company', 'bio');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
