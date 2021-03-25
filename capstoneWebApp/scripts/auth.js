@@ -1,24 +1,62 @@
+//add admin cloud function
+const adminForm = document.querySelector('.admin-actions');
+adminForm.addEventListener('submit',(e) => {
+    e.preventDefault();
+    const adminEmail = document.querySelector('#admin-email').value;
+    const addAdminRole = functions.httpsCallable('addAdminRole');
+    addAdminRole({email: adminEmail}).then(result => {
+        console.log(result);
+    });
+});
+
 //get data from db
-db.collection('guides').get().then(snapshot => {
-    setupGuides(snapshot.docs);
+db.collection('subjects').get().then(snapshot => {
+    setupSubjects(snapshot.docs);
 });
 
 //listen for auth status change
 auth.onAuthStateChanged(user => {
     
     if(user){
+        user.getIdTokenResult().then(idTokenResult => {
+          user.admin = idTokenResult.claims.admin; 
+          setupUI(); 
+        });
         //get data from db
-        db.collection('guides').onSnapshot(snapshot => {
-        setupGuides(snapshot.docs);
+        // db.collection('subjects').onSnapshot(snapshot => {
+        // setupSubjects(snapshot.docs);
+        // setupUI(user);
+        // }, err =>{
+        //     console.log(err.message);
+        // });
+
+        //get pupils
+        db.collection('tutors').onSnapshot(snapshot => {
+        setupPupils(snapshot.docs);
         setupUI(user);
         }, err =>{
             console.log(err.message);
         });
 
+        //get teachers
+        db.collection('teachers').onSnapshot(snapshot => {
+        setupTeachers(snapshot.docs);
+        setupUI(user);
+        }, err =>{
+            console.log(err.message);
+        });
+
+        // db.collection('subjects').onSnapshot(snapshot => {
+        // setupSubjectsTeacher(snapshot.docs);
+        // setupUI(user);
+        // }, err =>{
+        //     console.log(err.message);
+        // });
+
     }else{
         //if user is not signed in, empty array displays nothing
-        setupUI();
-        setupGuides([]);
+        
+        setupSubjects([]);
     }
 });
 
@@ -46,14 +84,14 @@ auth.onAuthStateChanged(user => {
 //     }
 // });
 
-//create new guide
+//create new subject
 const createForm = document.querySelector('#create-form');
 createForm.addEventListener('submit',(e) => {
     e.preventDefault();
 
-    db.collection('guides').add({
-        title: createForm['title'].value,
-        content: createForm['content'].value
+    db.collection('subjects').add({
+        subject_name: createForm['subjectname'].value,
+        //content: createForm['content'].value
     }).then(() => {
         //close the modal and reset form
         const modal = document.querySelector('#modal-create');
@@ -61,6 +99,87 @@ createForm.addEventListener('submit',(e) => {
         createForm.reset();
     }).catch(err =>{
       console.log(err.message); 
+    });
+});
+
+//add selected subjects
+// const selectSubjectForm = document.querySelector('#selectsubject-form');
+// selectSubjectForm.addEventListener('submit',(e) => {
+//     e.preventDefault();
+
+
+//     db.collection('teachersubject').add({
+        
+//         subject_name: selectSubjectForm['addsubjectname'].value,
+//         //content: createForm['content'].value
+//     }).then(() => {
+//         //close the modal and reset form
+//         const modal = document.querySelector('#modal-teacher-subjects');
+//         M.Modal.getInstance(modal).close();
+//         selectSubjectForm.reset();
+//     }).catch(err =>{
+//       console.log(err.message); 
+//     });
+// });
+
+//get subjects for teacher
+const subjectList = document.querySelector('#selectsubject');
+
+//create elements and render subjects
+function renderSubjects(doc){
+    let li = document.createElement('li');
+    let subject = document.createElement('span');
+
+    li.setAttribute('data-id',doc.id);
+    subject.textContent = doc.data().subject_name;
+
+    li.appendChild(subject);
+
+    subjectList.appendChild(li);
+    
+
+}
+
+db.collection('subjects').get().then((snapshot) => {
+    //console.log(snapshot.docs);
+    snapshot.docs.forEach(doc => {
+        renderSubjects(doc);        
+    });
+});
+
+//get subjects for admin
+const subjectListAdmin = document.querySelector('#admin-subjects');
+
+//create elements and render subjects
+function renderSubjectsAdmin(doc){
+    let li = document.createElement('li');
+    let subject = document.createElement('span');
+    let cross = document.createElement('div');
+
+    li.setAttribute('data-id',doc.id);
+    subject.textContent = doc.data().subject_name;
+    cross.textContent = 'x';
+
+    li.appendChild(subject);
+    li.appendChild(cross);
+
+    subjectListAdmin.appendChild(li);
+
+    //deleting subject
+    cross.addEventListener('click', (e) =>{
+        e.stopPropagation();
+        let id = e.target.parentElement.getAttribute('data-id');
+        db.collection('subjects').doc(id).delete();
+
+    })
+    
+
+}
+
+db.collection('subjects').get().then((snapshot) => {
+    //console.log(snapshot.docs);
+    snapshot.docs.forEach(doc => {
+        renderSubjectsAdmin(doc);        
     });
 });
 
@@ -90,6 +209,9 @@ signupForm.addEventListener('submit',(e) => {
         const modal = document.querySelector('#modal-signup');
         M.Modal.getInstance(modal).close();
         signupForm.reset();
+        signupForm.querySelector('.error').innerHTML = '';
+   }).catch(err => {
+       signupForm.querySelector('.error').innerHTML = err.message;
    });
 
 });
@@ -114,9 +236,26 @@ loginForm.addEventListener('submit',(e) => {
    auth.signInWithEmailAndPassword(email,password).then(cred => {
        const modal = document.querySelector('#modal-login');
        M.Modal.getInstance(modal).close();
-       loginForm.reset();    
+       loginForm.reset(); 
+       loginForm.querySelector('.error').innerHTML = '';   
+   }).catch(err => {
+    loginForm.querySelector('.error').innerHTML = err.message;
    });
 
 });
+
+//delete subejct
+// const deleteSubjectForm = document.querySelector('#deletesubject-form');
+
+// deleteSubjectForm.addEventListener('click',(e) => {
+//     e.preventDefault();
+
+//     db.collection("subjects").doc("subject_name").delete().then(() => {
+//         console.log("Subject successfully deleted!");
+//     }).catch((error) => {
+//         console.error("Error removing subject: ", error);
+//     });
+
+// })
 
 

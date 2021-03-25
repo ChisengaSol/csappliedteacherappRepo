@@ -16,14 +16,26 @@
         <img src="img/logo.svg" style="width: 180px; margin-top: 10px;">
       </a> -->
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li class="logged-in">
+          <li class="logged-in" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-teacher-subjects">Subject</a>
+          </li>
+          <li class="admin" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-admin-subjects">Subject</a>
+          </li>
+          <li class="logged-in" style="display: none;">
             <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
           </li>
-          <li class="logged-in">
+          <li class="logged-in" style="display: none;">
             <a href="#" class="grey-text" id="logout">Logout</a>
           </li>
-          <li class="logged-in">
-            <a href="#" class="grey-text modal-trigger" data-target="modal-create">Select subjects</a>
+          <li class="admin" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-create">Add subjects</a>
+          </li>
+          <li class="admin" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-teachers">See Teachers</a>
+          </li>
+          <li class="admin" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-pupils">See pupils</a>
           </li>
           <li class="logged-out">
             <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
@@ -35,6 +47,12 @@
       </ul>
     </div>
   </nav>
+
+   <!-- ADMIN ACTIONS -->
+  <form class="center-align admin-actions admin" style="margin: 40px auto; max-width: 300px; display:none;">
+    <input type="email" placeholder="User email" id="admin-email" required />
+    <button class="btn-small yellow darken-2 z-depth-0">Make admin</button>
+  </form>
 
   <!-- SIGN UP MODAL -->
   <div id="modal-signup" class="modal">
@@ -74,6 +92,7 @@
           <label for="signup-bio">Bio</label>
         </div>
         <button class="btn blue darken-2 z-depth-0">Sign up</button>
+        <p class ="error pink-text center-align"></p>
       </form>
     </div>
   </div>
@@ -92,6 +111,7 @@
           <label for="login-password">Your password</label>
         </div>
         <button class="btn blue darken-2 z-depth-0">Login</button>
+        <p class ="error pink-text center-align"></p>
       </form>
     </div>
   </div>
@@ -106,27 +126,70 @@
     
   </div>
 
-  <!-- CREATE GUIDE MODAL -->
+    <!-- SEE PUPILS -->
+    <div id="modal-pupils" class="modal">
+      <div class="modal-content center-align">
+        <h4>ALL Pupils</h4><br />
+        <div class="container" style="margin-top: 40px;">
+          <ul class="collapsible z-depth-0 pupils" style="border: none;">
+            
+          </ul>
+        </div>
+      </div>      
+    </div>
+
+    <!--SEE TEACHERS-->
+    <div id="modal-teachers" class="modal">
+      <div class="modal-content center-align">
+        <h4>ALL Teachers</h4><br />
+        <div class="container" style="margin-top: 40px;">
+          <ul class="collapsible z-depth-0 teachers" style="border: none;">
+            
+          </ul>
+        </div>
+      </div>      
+    </div>
+
+
+
+  <!-- ADD SUBJECT ADMIN MODAL -->
   <div id="modal-create" class="modal">
     <div class="modal-content">
-      <h4>Select subject</h4><br />
+      <h4>Add subject</h4><br />
       <form id="create-form">
         <div class="input-field">
-          <input type="text" id="title" required>
-          <label for="title">Subject</label>
-        </div>
-        <div class="input-field">
-          <textarea id="content" class="materialize-textarea" required></textarea>
-          <label for="content">Fee</label>
+          <input type="text" id="subjectname" required>
+          <label for="subjectname">Subject</label>
         </div>
         <button class="btn blue darken-2 z-depth-0">Add</button>
       </form>
     </div>
   </div>
 
-  <!-- GUIDE LIST -->
+  <!--ADMIN SUBJECTS LIST MODAL-->
+  <div id="modal-admin-subjects" class="modal">
+    <div class="container" style="margin-top: 40px;">
+      <h4>List of current subjects</h4>
+      <form id="admin-subjects-form"></form>
+      <ul class="subjectsadmin" id = "admin-subjects" style="border: none;">
+        
+      </ul>
+    </div>      
+  </div>
+
+  <!-- SUBJECTS LIST -->
+  <div id="modal-teacher-subjects" class="modal">
+    
+    <div class="container" style="margin-top: 40px;">
+      <h4>List of current subjects</h4>
+      <form id = "selectsubject-form"></form>
+      <ul class="subjectsteacher" id="selectsubject" style="border: none;"></ul>
+    </div>      
+  </div>
+
+  <!--Teachers list-->
   <div class="container" style="margin-top: 40px;">
-    <ul class="collapsible z-depth-0 guides" style="border: none;">
+    <ul class="collapsible z-depth-0 teachers" style="border: none;">
       
     </ul>
   </div> 
@@ -135,6 +198,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-functions.js"></script>
 
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
@@ -155,6 +219,7 @@
   //make auth and firestore references
   const auth = firebase.auth();
   const db = firebase.firestore();
+  const functions = firebase.functions();
 
   //update firestore settings
   //db.settings({timestampsInSnapshots:true});
