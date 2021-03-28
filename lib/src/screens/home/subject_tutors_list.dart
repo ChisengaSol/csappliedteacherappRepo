@@ -2,12 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class TeachersList extends StatefulWidget {
+  //getting the longitudes and latitudes to find the distance
+  // String long, lat;
+  // TeachersList({this.lat, this.long});
   @override
-  _TeachersListState createState() => _TeachersListState();
+  _TeachersListState createState() =>
+      _TeachersListState(); //added lat and long
 }
 
 //get teachers
 class _TeachersListState extends State<TeachersList> {
+  String long, lat;
+  _TeachersListState();//added this code
+
   Future _data;
 
   Future getTeachersForSubject() async {
@@ -49,7 +56,8 @@ class _TeachersListState extends State<TeachersList> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(snapshot.data[index].data()["firstName"]),
+                      title: Text(snapshot.data[index].data()["firstName"] + ' ' + snapshot.data[index].data()["lastName"] ),
+                      subtitle: Text("200 meters away"),
                       onTap: () => navigateToDetails(snapshot.data[index]),
                     );
                   });

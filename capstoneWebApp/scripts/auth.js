@@ -10,9 +10,9 @@ adminForm.addEventListener('submit',(e) => {
 });
 
 //get data from db
-db.collection('subjects').get().then(snapshot => {
-    setupSubjects(snapshot.docs);
-});
+// db.collection('subjects').get().then(snapshot => {
+//     setupSubjects(snapshot.docs);
+// });
 
 //listen for auth status change
 auth.onAuthStateChanged(user => {
@@ -56,7 +56,7 @@ auth.onAuthStateChanged(user => {
     }else{
         //if user is not signed in, empty array displays nothing
         
-        setupSubjects([]);
+        //setupSubjects([]);
     }
 });
 
@@ -195,7 +195,7 @@ signupForm.addEventListener('submit',(e) => {
 
    //sign up the user
    auth.createUserWithEmailAndPassword(email,password).then(cred => {
-       return db.collection('teachers').doc(cred.user.uid).set({
+       return db.collection('pendingaccounts').doc(cred.user.uid).set({
            firstName: signupForm['signup-fname'].value,
            lastName: signupForm['signup-lname'].value,
            dateOfBirth: signupForm['signup-dob'].value,
@@ -242,6 +242,75 @@ loginForm.addEventListener('submit',(e) => {
     loginForm.querySelector('.error').innerHTML = err.message;
    });
 
+});
+
+//Get pending requests for admin
+const pendingTeacherRequestsList = document.querySelector('#pending-teachers-list');
+
+//render pending teachers
+function renderPendingTeachers(doc){
+    let li = document.createElement('li');
+    let pfname = document.createElement('span');
+    let plname = document.createElement('span');
+    let reject = document.createElement('div');
+    let approve = document.createElement('div');
+
+    li.setAttribute('data-id', doc.id);
+    pfname.textContent = doc.data().firstName;
+    plname.textContent = doc.data().lastName;
+    approve.textContent = "Approve";
+    reject.textContent = "Reject";
+
+    li.appendChild(pfname);
+    li.appendChild(plname);
+    li.appendChild(approve);
+    li.appendChild(reject);
+
+    pendingTeacherRequestsList.appendChild(li);
+
+    //approving teachers
+    var fname, lname, dob, gender, location, bio;
+    approve.addEventListener('click',(e) =>{
+        e.stopPropagation();
+        let id = e.target.parentElement.getAttribute('data-id');
+        var pendingUsers = db.collection('pendingaccounts').doc(id);
+        pendingUsers.get().then((doc) => {
+            fname = doc.data()['firstName'];
+            lname = doc.data()['lastName'];
+            dob = doc.data()['dateOfBirth'];
+            gender = doc.data()['gender'];
+            location = doc.data()['location'];
+            bio = doc.data()['bio'];
+            //db.collection('pendingaccounts').doc(id).delete();
+           
+        });
+        if(fname != null){
+            db.collection('teachers').doc(id).set({
+                firstName: fname,
+                lastName: lname,
+                dateOfBirth: dob,
+                gender: gender,
+                location: gender,
+                bio: bio,
+            });
+            db.collection('pendingaccounts').doc(id).delete();
+        }
+    });
+
+    //rejecting teachers
+    reject.addEventListener('click',(e) => {
+        e.stopPropagation();
+        let id = e.target.parentElement.getAttribute('data-id');
+        db.collection('pendingaccounts').doc(id).delete();
+    });
+
+}
+
+db.collection('pendingaccounts').get().then((snapshot) => {
+    //console.log(snapshot);
+    snapshot.docs.forEach(doc => {
+        renderPendingTeachers(doc);
+    });
 });
 
 //delete subejct

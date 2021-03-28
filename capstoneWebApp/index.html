@@ -16,6 +16,9 @@
         <img src="img/logo.svg" style="width: 180px; margin-top: 10px;">
       </a> -->
       <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li class="admin" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-teacher-pending-confirmation">Teacher Requests</a>
+          </li>
           <li class="logged-in" style="display: none;">
             <a href="#" class="grey-text modal-trigger" data-target="modal-teacher-subjects">Subject</a>
           </li>
@@ -150,8 +153,19 @@
       </div>      
     </div>
 
-
-
+    <!--TEACHER REQUESTS-->
+    <div id="modal-teacher-pending-confirmation" class="modal">
+      <div class="modal-content center-align">
+        <h4>Teacher Requests</h4><br />
+        <div class="container" style="margin-top: 40px;">
+          <form id="approve-teacher-form"></form>
+          <ul class="collapsible z-depth-0" id= "pending-teachers-list" style="border: none;">
+            
+          </ul>
+        </div>
+      </div>      
+    </div>
+    
   <!-- ADD SUBJECT ADMIN MODAL -->
   <div id="modal-create" class="modal">
     <div class="modal-content">
@@ -204,6 +218,16 @@
      https://firebase.google.com/docs/web/setup#available-libraries -->
 
 <script>
+////////////geolocation function////////////
+  // const successCallback = (position) => {
+  //   console.log(position);
+  // }
+  // const errorCallback = (error) => {
+  //   console.error(error);
+  // }
+  // navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
+
+//////////////////////////////////////////
   // Your web app's Firebase configuration
   var firebaseConfig = {
     apiKey: "AIzaSyAwKDlM4kV2HhuDGtIcn8iqFozcJ7aO3sk",
