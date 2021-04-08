@@ -1,6 +1,5 @@
 /*This is a wrapper for login and signup */
 
-//import 'package:cs_applied_project/src/screens/authenticate/sign_in.dart';
 import 'package:csappliedteacherapp/src/screens/authenticate/login.dart';
 import 'package:csappliedteacherapp/src/screens/authenticate/register.dart';
 import 'package:flutter/material.dart';

@@ -19,17 +19,16 @@ class _TutorListState extends State<TutorList> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    //on init of the app, get the location of the user
     //var locationOptions =LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
     _positionStream = Geolocator.getPositionStream(
-            desiredAccuracy: LocationAccuracy.bestForNavigation,
-            distanceFilter: 4)
+            desiredAccuracy: LocationAccuracy.high,
+            distanceFilter: 10)
         .listen((Position position) {
       setState(() {
         print(position);
         myLatitude = position.latitude;
         myLongitude = position.longitude;
-        print(myLatitude);
-        print(myLongitude);
         _position = position;
 
       });

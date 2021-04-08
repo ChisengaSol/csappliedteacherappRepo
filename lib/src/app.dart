@@ -16,9 +16,8 @@ class App extends StatelessWidget {
         title: 'Welcome Myapp',
         theme: ThemeData(
           accentColor: Colors.orange,
-          primarySwatch: Colors.blue,
-        ),    
-        //home: LoginScreen(), 
+          primarySwatch: Colors.green,
+        ),     
         home: Wrapper(),
       ),
     );

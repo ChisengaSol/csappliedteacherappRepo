@@ -85,7 +85,7 @@ class _TeachersListState extends State<TeachersList> {
                         snapshot.data[index].data()["teacher_long"]);
 
                     //variable to store distance between a pupil and a teacher
-                    double teacherDistance = calculateDistance(teacherLat, teacherLong, myLatitude, myLongitude);
+                    double teacherDistance = calculateDistance(myLatitude, myLongitude,teacherLat, teacherLong);
 
                     return ListTile(
                       // title: Text(snapshot.data[index].data()["firstName"] +
