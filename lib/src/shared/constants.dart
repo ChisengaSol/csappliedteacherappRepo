@@ -16,3 +16,6 @@ const textInputDecoration = InputDecoration(
     ),
   ),
 );
+
+const mainColor = Color(0xFFDFF8FE);
+const wordsColor = Color(0xFF4B8BF4);

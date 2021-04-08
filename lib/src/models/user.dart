@@ -10,7 +10,6 @@ class UserData {
   final String lname;
   final String gender;
   final String company;
-  final String tutor_or_pupil;
   final String bio;
 
   UserData(
@@ -19,7 +18,6 @@ class UserData {
       this.lname,
       this.gender,
       this.company,
-      this.tutor_or_pupil,
       this.bio
       });
 }

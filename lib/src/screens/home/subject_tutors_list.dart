@@ -5,23 +5,34 @@ class TeachersList extends StatefulWidget {
   //getting the longitudes and latitudes to find the distance
   // String long, lat;
   // TeachersList({this.lat, this.long});
+  String subjectId;
+  TeachersList({this.subjectId});
+
   @override
   _TeachersListState createState() =>
-      _TeachersListState(); //added lat and long
+      _TeachersListState(subjectId); //added lat and long
 }
 
 //get teachers
 class _TeachersListState extends State<TeachersList> {
-  String long, lat;
-  _TeachersListState();//added this code
+  String subjectId;
+  //String long, lat;
+  _TeachersListState(this.subjectId); //added this code
 
   Future _data;
 
   Future getTeachersForSubject() async {
     var firestore = FirebaseFirestore.instance;
-    QuerySnapshot qs = await firestore.collection("teachers").get();
+    print(firestore);
+    //QuerySnapshot qs = await firestore.collection("teachers").get();
+    QuerySnapshot qs = await firestore
+        .collection("subjects")
+        .doc(subjectId)
+        .collection('teachersubject')
+        .get();
     return qs.docs;
   }
+  //var firestore = FirebaseFirestore.instance;
 
   //to navigate to teacher details
   navigateToDetails(DocumentSnapshot teacher) {
@@ -44,7 +55,7 @@ class _TeachersListState extends State<TeachersList> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: FutureBuilder(
+         child: FutureBuilder(
           future: _data,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -56,7 +67,10 @@ class _TeachersListState extends State<TeachersList> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(snapshot.data[index].data()["firstName"] + ' ' + snapshot.data[index].data()["lastName"] ),
+                      // title: Text(snapshot.data[index].data()["firstName"] +
+                      //     ' ' +
+                      //     snapshot.data[index].data()["lastName"]),
+                      title: Text(snapshot.data[index].id),
                       subtitle: Text("200 meters away"),
                       onTap: () => navigateToDetails(snapshot.data[index]),
                     );
@@ -64,6 +78,9 @@ class _TeachersListState extends State<TeachersList> {
             }
           },
         ),
+        // child: Text(
+        //   subjectId,
+        // ),
       ),
     );
   }

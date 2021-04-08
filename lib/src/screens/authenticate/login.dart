@@ -23,10 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
-      //backgroundColor: Colors.blue[100],
       appBar: AppBar(
-        //backgroundColor: Colors.blue[400],
-        elevation: 0.0,
+                elevation: 0.0,
         title: Text('Sign in'),
         actions: <Widget>[
           FlatButton.icon(

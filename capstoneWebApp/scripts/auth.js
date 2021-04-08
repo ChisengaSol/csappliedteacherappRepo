@@ -1,5 +1,7 @@
 //add admin cloud function
 const adminForm = document.querySelector('.admin-actions');
+const locform = document.querySelector('#selectsubject-form');
+
 adminForm.addEventListener('submit',(e) => {
     e.preventDefault();
     const adminEmail = document.querySelector('#admin-email').value;
@@ -121,21 +123,113 @@ createForm.addEventListener('submit',(e) => {
 //       console.log(err.message); 
 //     });
 // });
+var long;
+var lat;
+locform.addEventListener('submit',(e) => {
+    e.preventDefault();
+    // long = locform.longitude.value;
+    // lat = locform.latitude.value;
+    // console.log("the lattitude is ", lat);
+    // console.log("the longitude is ", long)
 
+    // const successCallback = (position) => {
+    //     console.log(position);
+    //     //lat = position.coords.latitude;
+    //     //long = position.coords.longitude;
+    //   }
+    //   const errorCallback = (error) => {
+    //     console.error(error);
+    //   }
+    // // if(navigator.geolocation){
+    // //     navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
+    // // }else{
+    // //     console.log('UnSupported');
+    // // }
+    // navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
+    var user  = firebase.auth().currentUser;
+    //console.log(user);
+    db.collection('userlocations').add({
+        userid: user.uid,
+        latitude: locform.latitude.value,
+        longitude: locform.longitude.value,
+    });
+      
+});
 //get subjects for teacher
 const subjectList = document.querySelector('#selectsubject');
 
 //create elements and render subjects
 function renderSubjects(doc){
+    var firstname, lastname, teacher_longitude, teacher_latitude;
+    // let li = document.createElement('li');
+    // let subject = document.createElement('span');
+    // //let add = document.createElement('div');
+
+    // li.setAttribute('data-id',doc.id);
+    // subject.textContent = doc.data().subject_name;
+    // add.textContent = 'Select';
+
+    // li.appendChild(subject);
+    //li.appendChild(add);
     let li = document.createElement('li');
     let subject = document.createElement('span');
+    let theplus = document.createElement('div');
 
     li.setAttribute('data-id',doc.id);
     subject.textContent = doc.data().subject_name;
+    theplus.textContent = '+';
 
     li.appendChild(subject);
+    li.appendChild(theplus);
+
+   // subjectListAdmin.appendChild(li);
 
     subjectList.appendChild(li);
+
+    //add teaccher to a particular subject subcollection
+    theplus.addEventListener('click',(e) => {
+        e.stopPropagation();
+        let subjectid = e.target.parentElement.getAttribute('data-id');
+        var user  = firebase.auth().currentUser;
+        console.log(user.uid);
+        console.log(subjectid);
+        //console.log(user.data());
+        // console.log("The longitude is ",long);
+        // console.log("The latitude is",lat);
+        db.collection('teachers').doc(user.uid).get().then((doc) => {
+            firstname= doc.data()['firstName'];
+            lastname = doc.data()['lastName'];
+          // console.log(firstname);
+        });
+        db.collection('userlocations').where('userid', '==',user.uid).get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                console.log(doc.id,'=>',doc.data());
+                //console.log(doc.data()['longitude']);
+                teacher_latitude = doc.data()['latitude'];
+                teacher_longitude = doc.data()['longitude'];
+            });
+        }).catch((error) => {
+            console.log("Error getting documents: ",error);
+        });
+        console.log(firstname);
+        console.log(lastname);
+        console.log(teacher_longitude);
+        console.log(teacher_latitude);
+        //console.log(teacher_latitude);
+        if(firstname == null || teacher_latitude == null){
+            alert("Process failed. Please try again...");
+        }else{
+
+            //db.collection('subjects').doc(subjectid).collection('teachersubjects').doc('teacher1');
+            db.collection('subjects').doc(subjectid).collection('teachersubject').doc(user.uid).set({
+                //ufirstName: user.data()['firstName'],
+                teacherId: user.uid,
+                teacherName: firstname + " " + lastname,
+                teacher_lat: teacher_latitude,
+                teacher_long: teacher_longitude,
+            });
+    }
+    });
     
 
 }

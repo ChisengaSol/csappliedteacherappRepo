@@ -62,6 +62,7 @@ class DatabaseService {
   //get tutors stream
   Stream<List<Tutor>> get tutors {
     return tutorsCollection.snapshots().map(_tutotListFromSnapshot);
+    //return tutorsCollection.
   }
 
   //get user doc stream
