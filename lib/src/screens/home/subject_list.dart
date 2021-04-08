@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csappliedteacherapp/src/screens/home/subject_tutors_list.dart';
-import 'package:csappliedteacherapp/src/screens/home/track_location.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-// final CollectionReference subjectsRef =
-//     FirebaseFirestore.instance.collection('subjects');
+import 'dart:async';
+import 'package:geolocator/geolocator.dart';
 
 class TutorList extends StatefulWidget {
   @override
@@ -14,30 +10,40 @@ class TutorList extends StatefulWidget {
 }
 
 class _TutorListState extends State<TutorList> {
-  /////////added
-  // @override
-  // void initState() {
-  //   //getSubjectTeachers();
-  //   getSubjectsById();
-  //   super.initState();
-  // }
-  //getting all the subjects
-  // getSubjectTeachers() {
-  //   subjectsRef.get().then((QuerySnapshot snapshot) {
-  //     snapshot.docs.forEach((DocumentSnapshot doc) {
-  //       print(doc.data());
-  //       print(doc.id);
-  //     });
-  //   });
-  // }
-  //
-  // getting subject by id
-  // getSubjectsById(){
+  
+  Position _position;
+  double myLatitude, myLongitude;
+  StreamSubscription<Position> _positionStream;
 
-  //   subjectsRef.doc()
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //var locationOptions =LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
+    _positionStream = Geolocator.getPositionStream(
+            desiredAccuracy: LocationAccuracy.bestForNavigation,
+            distanceFilter: 4)
+        .listen((Position position) {
+      setState(() {
+        print(position);
+        myLatitude = position.latitude;
+        myLongitude = position.longitude;
+        print(myLatitude);
+        print(myLongitude);
+        _position = position;
 
-  ///////////
+      });
+    });
+    
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _positionStream.cancel();
+  }
+  
   Future getSubjects() async {
     var firestore = FirebaseFirestore.instance;
     QuerySnapshot qs = await firestore.collection("subjects").get();
@@ -51,7 +57,6 @@ class _TutorListState extends State<TutorList> {
     return Container(
       child: FutureBuilder(
         future: getSubjects(),
-        //future: getSubjectTeachers(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -61,15 +66,16 @@ class _TutorListState extends State<TutorList> {
             return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
+
+                  //get id for a particular subject
                   final String subjectId = snapshot.data[index].id;
                   return ListTile(
-                    title: Text(subjectId),
-                    //title: Text(snapshot.data[index].data()["subject_name"]),
+                    title: Text(snapshot.data[index].data()["subject_name"]),
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => TeachersList(subjectId: subjectId),
+                              builder: (context) => TeachersList(subjectId: subjectId, myLatitude: myLatitude, myLongitude: myLatitude),
                               ));
                     },
                   );

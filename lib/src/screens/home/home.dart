@@ -1,12 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csappliedteacherapp/src/models/tutor.dart';
-import 'package:csappliedteacherapp/src/screens/authenticate/login.dart';
 import 'package:csappliedteacherapp/src/screens/home/subject_list.dart';
-import 'package:csappliedteacherapp/src/screens/home/subject_tutors_list.dart';
-import 'package:csappliedteacherapp/src/screens/home/track_location.dart';
 import 'package:csappliedteacherapp/src/screens/main_drawer_pages/menu_drawer.dart';
 import 'package:csappliedteacherapp/src/services/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:csappliedteacherapp/src/services/database.dart';
 import 'package:provider/provider.dart';
@@ -36,8 +31,6 @@ class HomeScreen extends StatelessWidget {
           child: MainDrawer(),
         ),
         body: TutorList(),
-        //body: TeachersList(),
-        //body: TrackLocation(),
       ),
     );
   }
