@@ -1,57 +1,93 @@
-// import 'dart:async';
+
+// /// Flutter code sample for BottomNavigationBar
+
+// // This example shows a [BottomNavigationBar] as it is used within a [Scaffold]
+// // widget. The [BottomNavigationBar] has three [BottomNavigationBarItem]
+// // widgets, which means it defaults to [BottomNavigationBarType.fixed], and
+// // the [currentIndex] is set to index 0. The selected item is
+// // amber. The `_onItemTapped` function changes the selected item's index
+// // and displays a corresponding message in the center of the [Scaffold].
 
 // import 'package:flutter/material.dart';
-// import 'package:geolocator/geolocator.dart';
 
-// class TrackLocation extends StatefulWidget {
-//   final String longitude;
-//   final String latitude;
-//   TrackLocation({this.latitude, this.longitude});
+// void main() => runApp(const MyApp());
+
+// /// This is the main application widget.
+// class MyApp extends StatelessWidget {
+//   const MyApp({Key? key}) : super(key: key);
+
+//   static const String _title = 'Flutter Code Sample';
+
 //   @override
-//   _TrackLocationState createState() => _TrackLocationState();
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       title: _title,
+//       home: MyStatefulWidget(),
+//     );
+//   }
 // }
 
-// class _TrackLocationState extends State<TrackLocation> {
-//   Position _position;
-//   double myLatitude, myLongitude;
-
-//   StreamSubscription<Position> _positionStream;
+// /// This is the stateful widget that the main application instantiates.
+// class MyStatefulWidget extends StatefulWidget {
+//   const MyStatefulWidget({Key? key}) : super(key: key);
 
 //   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     //var locationOptions =LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
-//     _positionStream = Geolocator.getPositionStream(
-//             desiredAccuracy: LocationAccuracy.bestForNavigation,
-//             distanceFilter: 4)
-//         .listen((Position position) {
-//       setState(() {
-//         print(position);
-//         myLatitude = position.latitude;
-//         myLongitude = position.longitude;
-//         print(myLatitude);
-//         print(myLongitude);
-//         _position = position;
+//   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+// }
 
-//       });
+// /// This is the private State class that goes with MyStatefulWidget.
+// class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+//   int _selectedIndex = 0;
+//   static const TextStyle optionStyle =
+//       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+//   static const List<Widget> _widgetOptions = <Widget>[
+//     Text(
+//       'Index 0: Home',
+//       style: optionStyle,
+//     ),
+//     Text(
+//       'Index 1: Business',
+//       style: optionStyle,
+//     ),
+//     Text(
+//       'Index 2: School',
+//       style: optionStyle,
+//     ),
+//   ];
+
+//   void _onItemTapped(int index) {
+//     setState(() {
+//       _selectedIndex = index;
 //     });
-    
-//   }
-
-//   @override
-//   void dispose() {
-//     // TODO: implement dispose
-//     super.dispose();
-//     _positionStream.cancel();
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('BottomNavigationBar Sample'),
+//       ),
 //       body: Center(
-//         child: Text(
-//             "Location\nLatitude: ${myLatitude},\nlongitude: ${myLongitude}"),
+//         child: _widgetOptions.elementAt(_selectedIndex),
+//       ),
+//       bottomNavigationBar: BottomNavigationBar(
+//         items: const <BottomNavigationBarItem>[
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.home),
+//             label: 'Home',
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.business),
+//             label: 'Business',
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.school),
+//             label: 'School',
+//           ),
+//         ],
+//         currentIndex: _selectedIndex,
+//         selectedItemColor: Colors.amber[800],
+//         onTap: _onItemTapped,
 //       ),
 //     );
 //   }

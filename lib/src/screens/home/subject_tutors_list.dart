@@ -8,24 +8,23 @@ class TeachersList extends StatefulWidget {
   TeachersList({this.subjectId, this.myLatitude, this.myLongitude});
 
   @override
-  _TeachersListState createState() => _TeachersListState(
-      subjectId, myLatitude, myLongitude); 
+  _TeachersListState createState() =>
+      _TeachersListState(subjectId, myLatitude, myLongitude);
 }
 
 //get teachers
 class _TeachersListState extends State<TeachersList> {
   String subjectId;
   double myLatitude, myLongitude;
-  
+
   _TeachersListState(
       this.subjectId, this.myLatitude, this.myLongitude); //added this code
 
   Future _data;
 
   Future getTeachersForSubject() async {
-
     var firestore = FirebaseFirestore.instance;
-  
+
     QuerySnapshot qs = await firestore
         .collection("subjects")
         .doc(subjectId)
@@ -33,7 +32,7 @@ class _TeachersListState extends State<TeachersList> {
         .get();
     return qs.docs;
   }
-  
+
   //to navigate to teacher details
   navigateToDetails(DocumentSnapshot teacher) {
     Navigator.push(
@@ -64,6 +63,9 @@ class _TeachersListState extends State<TeachersList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Available teachers..."),
+      ),
       body: Container(
         child: FutureBuilder(
           future: _data,
@@ -85,16 +87,30 @@ class _TeachersListState extends State<TeachersList> {
                         snapshot.data[index].data()["teacher_long"]);
 
                     //variable to store distance between a pupil and a teacher
-                    double teacherDistance = calculateDistance(myLatitude, myLongitude,teacherLat, teacherLong);
+                    double teacherDistance = calculateDistance(
+                        myLatitude, myLongitude, teacherLat, teacherLong);
 
                     return ListTile(
                       // title: Text(snapshot.data[index].data()["firstName"] +
                       //     ' ' +
                       //     snapshot.data[index].data()["lastName"]),
-                      title: Text(snapshot.data[index].data()["teacherName"]),
-                      subtitle:
-                          Text(
-                              "${teacherDistance.toStringAsFixed(2)} KM"),
+                      leading: Image(
+                        image: NetworkImage(
+                            'https://xenforo.com/community/data/avatars/o/202/202502.jpg'),
+                      ),
+                      title: Text(
+                        snapshot.data[index].data()["teacherName"],
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      subtitle: Text(
+                          "${teacherDistance.toStringAsFixed(2)} Km away from your location"),
+                      trailing: Icon(
+                        Icons.keyboard_arrow_right,
+                        size: 30.0,
+                      ),
                       onTap: () => navigateToDetails(snapshot.data[index]),
                     );
                   });
@@ -117,13 +133,29 @@ class TeacherDetails extends StatefulWidget {
 class _TeacherDetailsState extends State<TeacherDetails> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Card(
-        child: ListTile(
-          title: Text(widget.teacher.data()["teacherName"]),
-          // subtitle: Text(widget.teacher.data()["lastName"]),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("About " + widget.teacher.data()["teacherName"]),
       ),
+      // body: Container(
+      //   child: Card(
+      //     child: ListTile(
+      //       title: Text(widget.teacher.data()["teacherName"]),
+      //       // subtitle: Text(widget.teacher.data()["lastName"]),
+      //     ),
+          
+          
+      //   ),
+      // ),
+      body: Column(
+        children: [
+          Text("My name is Andre"),
+          SizedBox(height: 10,),
+          Text("I live in Lusaka"),
+          FlatButton(onPressed: (){}, child: Text("Connect"))
+        ],
+      ),
+      
     );
   }
 }
