@@ -152,6 +152,7 @@ locform.addEventListener('submit',(e) => {
         userid: user.uid,
         latitude: locform.latitude.value,
         longitude: locform.longitude.value,
+       // teacherPicture: locform.img.value,
     });
       
 });
@@ -160,7 +161,8 @@ const subjectList = document.querySelector('#selectsubject');
 
 //create elements and render subjects
 function renderSubjects(doc){
-    var firstname, lastname, teacher_longitude, teacher_latitude;
+    var firstname, lastname, teacher_longitude, teacher_latitude,
+    teacher_gender,teacher_email,teacher_school,teacher_bio;
     // let li = document.createElement('li');
     // let subject = document.createElement('span');
     // //let add = document.createElement('div');
@@ -199,6 +201,10 @@ function renderSubjects(doc){
         db.collection('teachers').doc(user.uid).get().then((doc) => {
             firstname= doc.data()['firstName'];
             lastname = doc.data()['lastName'];
+            teacher_gender = doc.data()['gender'];
+            teacher_school = doc.data()['school'];
+            teacher_email = doc.data()['userEmail'];
+            teacher_bio = doc.data()['bio'];
           // console.log(firstname);
         });
         db.collection('userlocations').where('userid', '==',user.uid).get().then((querySnapshot) => {
@@ -215,7 +221,7 @@ function renderSubjects(doc){
         console.log(lastname);
         console.log(teacher_longitude);
         console.log(teacher_latitude);
-        //console.log(teacher_latitude);
+        console.log(teacher_email);
         if(firstname == null || teacher_latitude == null){
             alert("Process failed. Please try again...");
         }else{
@@ -227,6 +233,10 @@ function renderSubjects(doc){
                 teacherName: firstname + " " + lastname,
                 teacher_lat: teacher_latitude,
                 teacher_long: teacher_longitude,
+                teachersex: teacher_gender,
+                teachermail: teacher_email,
+                teacherschool: teacher_school,
+                teacherbio: teacher_bio,
             });
     }
     });
@@ -294,7 +304,8 @@ signupForm.addEventListener('submit',(e) => {
            lastName: signupForm['signup-lname'].value,
            dateOfBirth: signupForm['signup-dob'].value,
            gender: signupForm['signup-gender'].value,
-           location: signupForm['signup-location'].value,
+           school: signupForm['signup-school'].value,
+           userEmail: email,
            bio: signupForm['signup-bio'].value
        });
        
@@ -363,7 +374,7 @@ function renderPendingTeachers(doc){
     pendingTeacherRequestsList.appendChild(li);
 
     //approving teachers
-    var fname, lname, dob, gender, location, bio;
+    var fname, lname, dob, gender, school,userEmail, bio;
     approve.addEventListener('click',(e) =>{
         e.stopPropagation();
         let id = e.target.parentElement.getAttribute('data-id');
@@ -373,10 +384,10 @@ function renderPendingTeachers(doc){
             lname = doc.data()['lastName'];
             dob = doc.data()['dateOfBirth'];
             gender = doc.data()['gender'];
-            location = doc.data()['location'];
+            school = doc.data()['school'];
+            userEmail = doc.data()['userEmail'];
             bio = doc.data()['bio'];
-            //db.collection('pendingaccounts').doc(id).delete();
-           
+            //db.collection('pendingaccounts').doc(id).delete();           
         });
         if(fname != null){
             db.collection('teachers').doc(id).set({
@@ -385,6 +396,8 @@ function renderPendingTeachers(doc){
                 dateOfBirth: dob,
                 gender: gender,
                 location: gender,
+                school: school,
+                userEmail: userEmail,
                 bio: bio,
             });
             db.collection('pendingaccounts').doc(id).delete();

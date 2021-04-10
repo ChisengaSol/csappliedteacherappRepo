@@ -87,8 +87,8 @@
           <label for="signup-dob">Date of Birth</label>
         </div>
         <div class="input-field">
-          <input type="text" id="signup-location" required />
-          <label for="signup-location">Location</label>
+          <input type="text" id="signup-school" required />
+          <label for="signup-location">School/Institution</label>
         </div>
         <div class="input-field">
           <input type="text" id="signup-bio" required />
@@ -130,6 +130,8 @@
     <!-- <p id ="lat"></p> -->
     <!-- <form id = "selectsubject-form"></form> -->
     <form id = "selectsubject-form">
+      <label for="img">Select image:</label>
+      <input type="file" id="img" name="img" accept="image/*">
       <button onclick="getUserLocation()">Add Your Location</button>
       <input id ="lat" name = "latitude" value="">
     <input id ="long" name = "longitude" value="">

@@ -136,23 +136,65 @@ class _TeacherDetailsState extends State<TeacherDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text("About " + widget.teacher.data()["teacherName"]),
-      ),
-      // body: Container(
-      //   child: Card(
-      //     child: ListTile(
-      //       title: Text(widget.teacher.data()["teacherName"]),
-      //       // subtitle: Text(widget.teacher.data()["lastName"]),
-      //     ),
-          
-          
-      //   ),
-      // ),
+      ),      
       body: Column(
         children: [
-          Text("My name is Andre"),
+          Container(
+                    width: 100,
+                    height: 100,
+                    margin: EdgeInsets.only(
+                      top: 30,
+                    ),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          'https://xenforo.com/community/data/avatars/o/202/202502.jpg',
+                        ),
+                        fit: BoxFit.fill,
+                      ), //it is NetworkImage because the image is being provided from the internet
+                    ),
+                  ),
           SizedBox(height: 10,),
-          Text("I live in Lusaka"),
-          FlatButton(onPressed: (){}, child: Text("Connect"))
+          Center(
+            child:  Text("Name: " + widget.teacher.data()["teacherName"],style: TextStyle(
+              fontSize: 20.0,
+            ),),          
+            ),
+            SizedBox(height: 10.0,),                   
+             Text("Email: " + widget.teacher.data()["teachermail"],style: TextStyle(
+               fontSize: 20.0,
+             ),),
+             SizedBox(height: 10.0,),
+             Text("Gender: " + widget.teacher.data()["teachersex"],style: TextStyle(
+               fontSize: 20.0,
+             ),),
+             SizedBox(height: 10.0,),             
+             Text("School: " + widget.teacher.data()["teacherschool"],style: TextStyle(
+               fontSize: 20.0,
+             ),),
+             SizedBox(height: 10.0,),
+             Text("Bio: " + widget.teacher.data()["teacherbio"], style: TextStyle(
+               fontSize: 20.0,
+             ),),
+          SizedBox(
+                        height: 20.0,
+                      ),
+                      SizedBox(
+                        height: 55,
+                        width: double.infinity,
+                        child: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          textColor: Colors.white,
+                          onPressed: (){},
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text("Connect", style: TextStyle(
+                            fontSize: 20.0,
+                          ),),
+                        ),
+                      ),
         ],
       ),
       
