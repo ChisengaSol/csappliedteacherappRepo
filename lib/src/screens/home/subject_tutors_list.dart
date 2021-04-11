@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csappliedteacherapp/src/screens/home/chatroom_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' show cos, sqrt, asin;
 
@@ -133,71 +135,106 @@ class TeacherDetails extends StatefulWidget {
 class _TeacherDetailsState extends State<TeacherDetails> {
   @override
   Widget build(BuildContext context) {
+    String teacherId = widget.teacher.data()["teacherId"];
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = auth.currentUser;
+    String pupilId = user.uid;
     return Scaffold(
       appBar: AppBar(
         title: Text("About " + widget.teacher.data()["teacherName"]),
-      ),      
+      ),
       body: Column(
         children: [
           Container(
-                    width: 100,
-                    height: 100,
-                    margin: EdgeInsets.only(
-                      top: 30,
-                    ),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          'https://xenforo.com/community/data/avatars/o/202/202502.jpg',
-                        ),
-                        fit: BoxFit.fill,
-                      ), //it is NetworkImage because the image is being provided from the internet
-                    ),
-                  ),
-          SizedBox(height: 10,),
-          Center(
-            child:  Text("Name: " + widget.teacher.data()["teacherName"],style: TextStyle(
-              fontSize: 20.0,
-            ),),          
+            width: 100,
+            height: 100,
+            margin: EdgeInsets.only(
+              top: 30,
             ),
-            SizedBox(height: 10.0,),                   
-             Text("Email: " + widget.teacher.data()["teachermail"],style: TextStyle(
-               fontSize: 20.0,
-             ),),
-             SizedBox(height: 10.0,),
-             Text("Gender: " + widget.teacher.data()["teachersex"],style: TextStyle(
-               fontSize: 20.0,
-             ),),
-             SizedBox(height: 10.0,),             
-             Text("School: " + widget.teacher.data()["teacherschool"],style: TextStyle(
-               fontSize: 20.0,
-             ),),
-             SizedBox(height: 10.0,),
-             Text("Bio: " + widget.teacher.data()["teacherbio"], style: TextStyle(
-               fontSize: 20.0,
-             ),),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(
+                  'https://xenforo.com/community/data/avatars/o/202/202502.jpg',
+                ),
+                fit: BoxFit.fill,
+              ), //it is NetworkImage because the image is being provided from the internet
+            ),
+          ),
           SizedBox(
-                        height: 20.0,
-                      ),
-                      SizedBox(
-                        height: 55,
-                        width: double.infinity,
-                        child: FlatButton(
-                          color: Theme.of(context).primaryColor,
-                          textColor: Colors.white,
-                          onPressed: (){},
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text("Connect", style: TextStyle(
-                            fontSize: 20.0,
-                          ),),
-                        ),
-                      ),
+            height: 10,
+          ),
+          Center(
+            child: Text(
+              "Name: " + widget.teacher.data()["teacherName"],
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            "Email: " + widget.teacher.data()["teachermail"],
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            "Gender: " + widget.teacher.data()["teachersex"],
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            "School: " + widget.teacher.data()["teacherschool"],
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            "Bio: " + widget.teacher.data()["teacherbio"],
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          SizedBox(
+            height: 55,
+            width: double.infinity,
+            child: FlatButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Chatroom(teacherId: teacherId,pupilId: pupilId)));
+                //print("Pupil Id: " + pupilId + " and Teacher Id:  " + teacherId);
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                "Connect",
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
-      
     );
   }
 }
