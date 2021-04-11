@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class Chatroom extends StatefulWidget {
   final String teacherId, pupilId;
   Chatroom({this.teacherId, this.pupilId});
-  //Chatroom(this.teacherId, this.pupilId);
   @override
   _ChatroomState createState() => _ChatroomState(teacherId, pupilId);
 }

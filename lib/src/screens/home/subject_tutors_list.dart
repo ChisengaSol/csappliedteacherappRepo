@@ -220,7 +220,6 @@ class _TeacherDetailsState extends State<TeacherDetails> {
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Chatroom(teacherId: teacherId,pupilId: pupilId)));
-                //print("Pupil Id: " + pupilId + " and Teacher Id:  " + teacherId);
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

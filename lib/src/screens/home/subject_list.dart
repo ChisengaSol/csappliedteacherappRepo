@@ -49,7 +49,6 @@ class _TutorListState extends State<TutorList> {
   Future getSubjects() async {
     var firestore = FirebaseFirestore.instance;
     QuerySnapshot qs = await firestore.collection("subjects").get();
-    print(qs.docs);
     return qs.docs;
   }
 
