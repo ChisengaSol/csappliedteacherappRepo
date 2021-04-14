@@ -109,7 +109,7 @@ header{
 .nav-links li a:hover{
 	color: #00b712;	
 }*/
-button{
+.log-out{
 	margin-left: 20px;
 	padding: 9px 25px;
 	background-color:rgba(191, 191, 191, 1);
@@ -118,7 +118,7 @@ button{
 	cursor: pointer;
 	transition: all 0.3s ease 0s;
 }
-button:hover{
+.log-out:hover{
 	background-color:rgba(191, 191, 191, 0.5);
 }
  

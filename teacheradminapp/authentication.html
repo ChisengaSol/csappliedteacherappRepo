@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>login| register</title>
+        <link rel = "stylesheet" href = "style.css">
+    </head>
+    <body>
+        <div class = "hero">
+            <div class = "form-box">
+                <div class="button-box">
+                    <div id ="btn"></div>
+                    <button type="button" class="toggle-btn" onclick="login()">Login</button>
+                    <button type="button" class="toggle-btn" onclick="register()">Sign up</button>
+                </div>
+                <form id= "loginform" class="input-group">
+                    <input type="email" class="input-field" placeholder="Email" id="login-email" required>
+                    <input type="password" class="input-field" placeholder="Password" id="login-password" required>
+                    <button type="submit" class="submit-btn">Login</button>
+                    <!-- <p class ="error pink-text center-align"></p> -->
+                </form>
+                <form id = "register" class="input-group">
+                    <input type="text" class="input-field" placeholder="Email" required>
+                    <input type="password" class="input-field" placeholder="Password" required>
+                    <input type="password" class="input-field" placeholder="Password" required>
+                    <input type="password" class="input-field" placeholder="Password" required>
+                    <button type="submit" class="submit-btn">Sign up</button>
+                </form>
+            </div>
+        </div>
+
+          <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-functions.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+            https://firebase.google.com/docs/web/setup#available-libraries -->
+
+        <script>
+            var x = document.getElementById("loginform");
+            var y = document.getElementById("register");
+            var z = document.getElementById("btn");
+
+            function register() {
+                x.style.left = "-400px";  
+                y.style.left = "50px"; 
+                z.style.left = "110px";               
+            }
+
+            function login() {
+                x.style.left = "50px";  
+                y.style.left = "450px"; 
+                z.style.left = "0px";               
+            }
+            ////////////geolocation function////////////
+            const successCallback = (position) => {
+                console.log(position);
+                const lati = position.coords.latitude;
+                const longi = position.coords.longitude;
+                // console.log(lati);
+                // console.log(longi);
+                document.getElementById("long").value = longi;
+                document.getElementById("lat").value = lati;
+                
+            }
+            const errorCallback = (error) => {
+                console.error(error);
+            }
+            function getUserLocation(){
+                if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
+                }else{
+                console.log('UnSupported');
+                }
+            }
+            // navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
+
+            //////////////////////////////////////////
+            // Your web app's Firebase configuration
+                       
+
+            
+
+        </script>
+        
+        <!-- Compiled and minified JavaScript -->
+        <script src="scripts/authenticate.js"></script>
+        <script src="scripts/users.js"></script>
+        <script>
+            firebase.auth().onAuthStateChanged(function(user){
+                if(user){
+                    window.location.href = "landingpage.html";
+                    console.log(user);
+                }
+            });
+        </script>
+    </body>
+</html>
+

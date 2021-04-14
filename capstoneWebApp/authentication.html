@@ -6,17 +6,18 @@
         <link rel = "stylesheet" href = "style.css">
     </head>
     <body>
-        <div class = "hero">
+        <div class = "hero" id="modal-login">
             <div class = "form-box">
                 <div class="button-box">
                     <div id ="btn"></div>
                     <button type="button" class="toggle-btn" onclick="login()">Login</button>
                     <button type="button" class="toggle-btn" onclick="register()">Sign up</button>
                 </div>
-                <form id= "login" class="input-group">
-                    <input type="email" class="input-field" placeholder="Email" required>
-                    <input type="password" class="input-field" placeholder="Password" required>
+                <form id= "login-form" class="input-group">
+                    <input type="email" class="input-field" placeholder="Email" id="login-email" required>
+                    <input type="password" class="input-field" placeholder="Password" id="login-password" required>
                     <button type="submit" class="submit-btn">Login</button>
+                    <p class ="error pink-text center-align"></p>
                 </form>
                 <form id = "register" class="input-group">
                     <input type="text" class="input-field" placeholder="Email" required>
@@ -27,8 +28,18 @@
                 </form>
             </div>
         </div>
+
+          <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-functions.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+            https://firebase.google.com/docs/web/setup#available-libraries -->
+
         <script>
-            var x = document.getElementById("login");
+            var x = document.getElementById("login-form");
             var y = document.getElementById("register");
             var z = document.getElementById("btn");
 
@@ -43,7 +54,63 @@
                 y.style.left = "450px"; 
                 z.style.left = "0px";               
             }
+            ////////////geolocation function////////////
+            const successCallback = (position) => {
+                console.log(position);
+                const lati = position.coords.latitude;
+                const longi = position.coords.longitude;
+                // console.log(lati);
+                // console.log(longi);
+                document.getElementById("long").value = longi;
+                document.getElementById("lat").value = lati;
+                
+            }
+            const errorCallback = (error) => {
+                console.error(error);
+            }
+            function getUserLocation(){
+                if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
+                }else{
+                console.log('UnSupported');
+                }
+            }
+            // navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
+
+            //////////////////////////////////////////
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyAwKDlM4kV2HhuDGtIcn8iqFozcJ7aO3sk",
+                authDomain: "csapplied-teacher-app-db.firebaseapp.com",
+                projectId: "csapplied-teacher-app-db",
+                //storageBucket: "csapplied-teacher-app-db.appspot.com",
+                //messagingSenderId: "628599017742",
+                appId: "1:628599017742:web:303ca8b1b79593a26a875f"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            //make auth and firestore references
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            const functions = firebase.functions();
+
+            //update firestore settings
+            //db.settings({timestampsInSnapshots:true});
+
         </script>
+        <script>
+            auth.onAuthStateChanged(function(user){
+                if(user){
+                    window.location.href = "index.html";
+                }
+            });
+        </script>
+        
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="scripts/auth.js"></script>
+        <script src="scripts/index.js"></script>
     </body>
 </html>
 

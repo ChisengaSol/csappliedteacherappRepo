@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Teacher Requests</title>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-inner"> 
+            <a href="landingpage.html" style="display:none;">Home</a>
+            <a href="subjects.html" style="display:none;">Subjects</a>
+            <a href="#" class="admin" style="display:none;">Admin Subjects</a>
+            <div class="dropdown admin" style="display:none;">
+            <button class="dropbtn">People 
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content admin">
+                <a href="#" >Teachers</a>
+                <a href="#" >Pupils</a>
+                <a href="#" >Requests</a>
+            </div>
+            </div> 
+            <a href="" style="display:none;">Chat</a>
+            <a href="account.html" style="display:none;">Account</a>
+         </div>
+        <button class = "log-out" style="display:none;">Log out</button>
+      </div>
+
+    <form action="" class="admin-actions">
+        <input type="email" id = "admin-email" placeholder="User Email" required>
+        <button>Make Admin</button>
+    </form>
+
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-functions.js"></script>
+
+    <script src="scripts/authenticate.js"></script>
+    <script src="scripts/users.js"></script>
+    
+</body>
+</html>

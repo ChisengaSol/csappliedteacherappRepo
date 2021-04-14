@@ -2,14 +2,19 @@
 const adminForm = document.querySelector('.admin-actions');
 const locform = document.querySelector('#selectsubject-form');
 
-adminForm.addEventListener('submit',(e) => {
-    e.preventDefault();
-    const adminEmail = document.querySelector('#admin-email').value;
-    const addAdminRole = functions.httpsCallable('addAdminRole');
-    addAdminRole({email: adminEmail}).then(result => {
-        console.log(result);
+if(adminForm){
+    adminForm.addEventListener('submit',(e) => {
+        e.preventDefault();
+        const adminEmail = document.querySelector('#admin-email').value;
+        const addAdminRole = functions.httpsCallable('addAdminRole');
+        addAdminRole({email: adminEmail}).then(result => {
+            console.log(result);
+        });
     });
-});
+
+}
+
+
 
 //get data from db
 // db.collection('subjects').get().then(snapshot => {
@@ -88,21 +93,25 @@ auth.onAuthStateChanged(user => {
 
 //create new subject
 const createForm = document.querySelector('#create-form');
-createForm.addEventListener('submit',(e) => {
-    e.preventDefault();
 
-    db.collection('subjects').add({
-        subject_name: createForm['subjectname'].value,
-        //content: createForm['content'].value
-    }).then(() => {
-        //close the modal and reset form
-        const modal = document.querySelector('#modal-create');
-        M.Modal.getInstance(modal).close();
-        createForm.reset();
-    }).catch(err =>{
-      console.log(err.message); 
+if(createForm){
+    createForm.addEventListener('submit',(e) => {
+        e.preventDefault();
+    
+        db.collection('subjects').add({
+            subject_name: createForm['subjectname'].value,
+            //content: createForm['content'].value
+        }).then(() => {
+            //close the modal and reset form
+            const modal = document.querySelector('#modal-create');
+            M.Modal.getInstance(modal).close();
+            createForm.reset();
+        }).catch(err =>{
+          console.log(err.message); 
+        });
     });
-});
+}
+
 
 //add selected subjects
 // const selectSubjectForm = document.querySelector('#selectsubject-form');
