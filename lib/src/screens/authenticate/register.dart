@@ -1,5 +1,8 @@
+import 'package:csappliedteacherapp/src/screens/authenticate/helperfunctions.dart';
 import 'package:csappliedteacherapp/src/services/auth.dart';
+import 'package:csappliedteacherapp/src/services/database.dart';
 import 'package:csappliedteacherapp/src/shared/loading.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
@@ -12,6 +15,9 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  DatabaseService _databaseService = new DatabaseService();
+  //HelperFunctions helperFunctions = new HelperFunctions();
+
   bool loading = false;
 
   //text field state
@@ -67,7 +73,8 @@ class _RegisterState extends State<Register> {
                       ),
                       Container(
                         child: TextFormField(
-                          validator: (value) => value.isEmpty ? 'Enter an email' : null,
+                          validator: (value) =>
+                              value.isEmpty ? 'Enter an email' : null,
                           //updates state of email when user is typing
                           onChanged: (value) {
                             setState(() => email = value);
@@ -95,7 +102,9 @@ class _RegisterState extends State<Register> {
                       Container(
                         child: TextFormField(
                           obscureText: true,
-                          validator: (value) => value.length < 8 ? 'Enter atleast 8 characters' : null,
+                          validator: (value) => value.length < 8
+                              ? 'Enter atleast 8 characters'
+                              : null,
                           //updates state of password when user is typing
                           onChanged: (value) {
                             setState(() => password = value);
@@ -134,12 +143,24 @@ class _RegisterState extends State<Register> {
                               setState(() => loading = true);
                               dynamic result =
                                   await _auth.emailAndPwordReg(email, password);
+
                               if (result == null) {
                                 setState(() {
                                   error = 'Enter valid email';
                                   loading = false;
                                 });
                               }
+                              Map<String, String> userInfoMap = {
+                                "email": email,
+                              };
+
+                              HelperFunctions.saveUserEmailSharedPreference(
+                                  email);
+
+                              //adds user data to the users collection
+                              _databaseService.uploadUserInfo(userInfoMap);
+                              HelperFunctions.saveUserLoggedInSharedPreference(
+                                  true);
                             }
                           },
                           shape: RoundedRectangleBorder(
@@ -188,6 +209,5 @@ class _RegisterState extends State<Register> {
               ),
             ),
           ));
-    }
+  }
 }
-

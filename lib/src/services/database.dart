@@ -71,5 +71,57 @@ class DatabaseService {
   }
 
   //get user details
-  
+
+  //get user for search in chatting
+  getUserByEmail(String email) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: email)
+        .get();
+  }
+
+  //upload user info for chats
+  uploadUserInfo(userMap) {
+    FirebaseFirestore.instance.collection('users').add(userMap).catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  //
+  createChatRoom(String chatroomId, chatroomMap) {
+    FirebaseFirestore.instance
+        .collection('chatroom')
+        .doc(chatroomId)
+        .set(chatroomMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  addConvoMessages(String chatroomId, messageMap) {
+    FirebaseFirestore.instance
+        .collection('chatroom')
+        .doc(chatroomId)
+        .collection('chats')
+        .add(messageMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  getConvoMessages(String chatroomId) async {
+    return await FirebaseFirestore.instance
+        .collection('chatroom')
+        .doc(chatroomId)
+        .collection('chats')
+        .orderBy('time', descending: false)
+        .snapshots();
+  }
+
+  getChatrooms(String userEmail) async{
+    return await FirebaseFirestore.instance
+        .collection('chatroom')
+        .where('users', arrayContains: userEmail)
+        .snapshots();
+  }
 }

@@ -1,7 +1,11 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csappliedteacherapp/src/services/auth.dart';
+import 'package:csappliedteacherapp/src/services/database.dart';
 import 'package:csappliedteacherapp/src/shared/loading.dart';
 import 'package:flutter/material.dart';
+
+import 'helperfunctions.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
@@ -11,9 +15,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  DatabaseService databaseService = new DatabaseService();
+
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
+  QuerySnapshot snapshotUserInfo;
 
   //text field state
   String email = '';
@@ -67,7 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Container(
                         child: TextFormField(
-                          validator: (value) => value.isEmpty ? 'Enter an email' : null,
+                          validator: (value) =>
+                              value.isEmpty ? 'Enter an email' : null,
                           //updates state of email when user is typing
                           onChanged: (value) {
                             setState(() => email = value);
@@ -95,7 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         child: TextFormField(
                           obscureText: true,
-                          validator: (value) => value.length < 8 ? 'Enter atleast 8 characters' : null,
+                          validator: (value) => value.length < 8
+                              ? 'Enter atleast 8 characters'
+                              : null,
                           //updates state of password when user is typing
                           onChanged: (value) {
                             setState(() => password = value);
@@ -147,15 +157,32 @@ class _LoginScreenState extends State<LoginScreen> {
                           textColor: Colors.white,
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
+                              HelperFunctions.saveUserEmailSharedPreference(
+                                  email);
+
+                              databaseService
+                                  .getUserByEmail(email)
+                                  .then((value) {
+                                snapshotUserInfo = value;
+                                HelperFunctions.saveUserEmailSharedPreference(
+                                    snapshotUserInfo.docs[0].data()["email"]);
+                                //print('${snapshotUserInfo.docs[0].data()["email"]} This my email');
+                              });
+
                               setState(() => loading = true);
-                              dynamic result =
-                                  await _auth.emailAndPwordSignIn(email, password);
+
+                              dynamic result = await _auth.emailAndPwordSignIn(
+                                  email, password);
                               if (result == null) {
                                 setState(() {
-                                  error = 'Sign in failed. Please check your credentials';
+                                  error =
+                                      'Sign in failed. Please check your credentials';
                                   loading = false;
                                 });
                               }
+
+                              HelperFunctions.saveUserLoggedInSharedPreference(
+                                  true);
                             }
                           },
                           shape: RoundedRectangleBorder(
