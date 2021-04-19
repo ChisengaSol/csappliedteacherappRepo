@@ -1,20 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h3>Provide the following details for veirification with your institution</h3>
-    <form>
-        <input type = "text" placeholder = "Your Full name">
-        <input type = "text" placeholder = "School/Institution">
-        <input type = "text" placeholder = "School/Institution address">
-        <input type = "text" placeholder = "School/Institution telephone">
-        <input type = "text" placeholder = "School/Institution email">
-        <button type="submit">Submit</button>
-    </form>
-</body>
+<html>
+    <head>
+        <title>home</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="navbar">
+            <div class="navbar-inner"> 
+                <a href="pendinguser.html">Home</a>
+             </div>
+             <div class="navbar-inner"> 
+                <a href="#">Provide Credentials</a>
+             </div>
+            <button class = "log-out" id="logout">Log out</button>
+          </div>
+        <h3>Provide the following details for veirification with your institution</h3>
+        <form>
+            <input type = "text" placeholder = "Your Full name">
+            <input type = "text" placeholder = "School/Institution">
+            <input type = "text" placeholder = "School/Institution address">
+            <input type = "text" placeholder = "School/Institution telephone">
+            <input type = "text" placeholder = "School/Institution email">
+            <button type="submit">Submit</button>
+        </form>
+          
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-functions.js"></script>
+
+        <script src="scripts/authenticate.js"></script>
+        <script src="scripts/users.js"></script>
+        <!-- <script>
+            firebase.auth().onAuthStateChanged(function(user){
+                if(user){
+                    window.location.href = "authentication.html";
+                }
+            });
+        </script> -->
+    </body>
 </html>

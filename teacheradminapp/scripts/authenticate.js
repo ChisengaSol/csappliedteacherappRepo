@@ -95,7 +95,54 @@ if(loginForm){
         });
     });
 }
+//////////////////////
+//signup
+// $(function () {
+//     $("#btnSubmit").click(function () {
+//         var password = $("#txtPassword").val();
+//         var confirmPassword = $("#txtConfirmPassword").val();
+//         if (password != confirmPassword) {
+//             alert("Passwords do not match.");
+//             return false;
+//         }
+//         return true;
+//     });
+// });
+const signupForm = document.querySelector("#register");
 
+if(signupForm){
+    signupForm.addEventListener('submit',(e) => {
+        e.preventDefault();
+    
+        //get user info
+        const email = signupForm['signup-email'].value;
+        const password = signupForm['txtPassword'].value;
+        const confirmpassword = signupForm['txtConfirmPassword'].value;
+        // console.log(email);
+        // console.log(password);
+
+        if(password != confirmpassword){
+            alert("Passwords do not match");
+        }else{
+            auth.createUserWithEmailAndPassword(email,password)
+            .then((userCredential) => {
+                // Signed in 
+                var user = userCredential.user;
+                console.log(user.data());
+                // ...
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                // ..
+            });
+        }
+            
+        
+    
+    });
+
+}
 /////////////////////////////////////////////////////////////////////
 
 const subjectlist = document.querySelector("#selectsubject");

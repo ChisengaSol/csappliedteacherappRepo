@@ -20,11 +20,11 @@
                     <!-- <p class ="error pink-text center-align"></p> -->
                 </form>
                 <form id = "register" class="input-group">
-                    <input type="text" class="input-field" placeholder="Email" required>
-                    <input type="password" class="input-field" placeholder="Password" required>
-                    <input type="password" class="input-field" placeholder="Retype Password" required>
-                    <!-- <button type="submit" class="submit-btn">Sign up</button> -->
-                    <input type="button" id="btnSubmit" class="submit-btn" value="Sign up" />
+                    <input type="text" class="input-field" placeholder="Email" id= "signup-email" required>
+                    <input type="password" class="input-field" id= "txtPassword" placeholder="Password" required>
+                    <input type="password" class="input-field" id="txtConfirmPassword" placeholder="Retype Password" required>
+                    <button type="submit" id="btnSubmit" class="submit-btn">Sign up</button>
+                    <!-- <input type="button" id="btnSubmit" class="submit-btn" value="Sign up" /> -->
                 </form>
             </div>
         </div>
@@ -37,6 +37,9 @@
 
         <!-- TODO: Add SDKs for Firebase products that you want to use
             https://firebase.google.com/docs/web/setup#available-libraries -->
+
+        <!--Jquery-->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
         <script>
             var x = document.getElementById("loginform");
@@ -102,6 +105,8 @@
                             window.location.href = "pendinguser.html";
 
                         }
+                    }).catch((error) => {
+                        console.log("Error getting document:", error);
                     });
                  }
             });
@@ -117,6 +122,36 @@
 
             }
         </script> -->
+        <script>
+            // $(function () {
+            //     $("#btnSubmit").click(function () {
+            //         var email = $("#signup-email").val();
+            //         var password = $("#txtPassword").val();
+            //         var confirmPassword = $("#txtConfirmPassword").val();
+            //         if (password != confirmPassword) {
+            //             alert("Passwords do not match.");
+            //             return false;
+            //         }else{
+            //         //return true;
+            //        // window.location.href = "pendinguser.html";
+            //        auth.createUserWithEmailAndPassword(email,password)
+            //             .then((userCredential) => {
+            //                 // Signed in 
+            //                 var user = userCredential.user;
+            //                 console.log(user.data());
+            //                 window.location.href = "teacherverificationdetails.html";
+
+            //                 // ...
+            //             })
+            //             .catch((error) => {
+            //                 var errorCode = error.code;
+            //                 var errorMessage = error.message;
+            //                 // ..
+            //             });
+            //         }
+            //     });
+            // });
+        </script>
     </body>
 </html>
 
