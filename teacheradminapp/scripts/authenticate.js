@@ -95,19 +95,7 @@ if(loginForm){
         });
     });
 }
-//////////////////////
-//signup
-// $(function () {
-//     $("#btnSubmit").click(function () {
-//         var password = $("#txtPassword").val();
-//         var confirmPassword = $("#txtConfirmPassword").val();
-//         if (password != confirmPassword) {
-//             alert("Passwords do not match.");
-//             return false;
-//         }
-//         return true;
-//     });
-// });
+
 const signupForm = document.querySelector("#register");
 
 if(signupForm){
@@ -148,22 +136,6 @@ if(signupForm){
 const subjectlist = document.querySelector("#selectsubject");
 //get subjects
 if(subjectlist){
-    // function renderSubjects(doc){
-    //     let li = document.createElement('li');
-    //     let subjectname = document.createElement('span');
-
-    //     li.setAttribute('data-id', doc.id);
-    //     subjectname.textContent = doc.data().subject_name;
-
-    //     li.appendChild(subjectname);
-    //     subjectlist.appendChild(li);
-        
-    // }
-    // db.collection("subjects").get().then((snapshot) => {
-    //     snapshot.docs.forEach(doc => {
-    //         renderSubjects(doc);
-    //     });
-    // });
     function renderSubjects(doc){
         var firstname, lastname, teacher_longitude, teacher_latitude,
         teacher_gender,teacher_email,teacher_school,teacher_bio;
@@ -292,6 +264,23 @@ if(form){
     });
 }
 
+const verificationDetails = document.querySelector("#pending-details-form");
+if(verificationDetails){
+    verificationDetails.addEventListener('submit',(e) => {
+        var user = firebase.auth().currentUser;
+        //console.log("The id is: ", user.uid);
+        
+        db.collection('pendingaccounts').doc(user.uid).set({        
+        firstName: verificationDetails['first-name'].value,
+        lastName: verificationDetails['last-name'].value,
+        school: verificationDetails['school'].value,
+        schoolAddress: verificationDetails['school-address'].value,
+        schoolTel: verificationDetails['school-tel'].value,
+        schoolEmail: verificationDetails['school-email'].value,
+      });   
+      
+    });
+}
 
 //logout
 const logout = document.querySelector("#logout");
