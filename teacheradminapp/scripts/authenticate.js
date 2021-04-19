@@ -67,8 +67,8 @@ if(loginForm){
         //get mail and pword
         const email = loginForm['login-email'].value;
         const password = loginForm['login-password'].value;
-        console.log(email);
-        console.log(password);
+        // console.log(email);
+        // console.log(password);
     
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => {
@@ -78,10 +78,11 @@ if(loginForm){
             // ...
             // New sign-in will be persisted with session persistence.
             return auth.signInWithEmailAndPassword(email, password).then(cred => {
-                console.log(cred.user);
+                //console.log(cred.user);
                 //loginForm.reset();
 
-                console.log("redirect");
+                console.log("Successful login!");
+                
 
             });
         })
