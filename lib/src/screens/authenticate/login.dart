@@ -7,6 +7,19 @@ import 'package:flutter/material.dart';
 
 import 'helperfunctions.dart';
 
+//validator classes
+class EmailFieldValidator {
+  static String validate(String value) {
+    return value.isEmpty ? 'Email can\'t be empty' : null;
+  }
+}
+
+class PasswordFieldValidator {
+  static String validate(String value) {
+    return value.length < 8 ? 'Password should have more than 8 characters' : null;
+  }
+}
+
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
   LoginScreen({this.toggleView});
@@ -74,8 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Container(
                         child: TextFormField(
-                          validator: (value) =>
-                              value.isEmpty ? 'Enter an email' : null,
+                          key: const ValueKey("userEmail"),
+                          validator: EmailFieldValidator.validate,
                           //updates state of email when user is typing
                           onChanged: (value) {
                             setState(() => email = value);
@@ -102,10 +115,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Container(
                         child: TextFormField(
+                          key: const ValueKey("password"),
                           obscureText: true,
-                          validator: (value) => value.length < 8
-                              ? 'Enter atleast 8 characters'
-                              : null,
+                          validator: PasswordFieldValidator.validate,
                           //updates state of password when user is typing
                           onChanged: (value) {
                             setState(() => password = value);
@@ -153,6 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 55,
                         width: double.infinity,
                         child: FlatButton(
+                          key: const ValueKey("Login"),
                           color: Theme.of(context).primaryColor,
                           textColor: Colors.white,
                           onPressed: () async {
@@ -211,6 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           GestureDetector(
+                            key: ValueKey("createAccount"),
                             onTap: () {
                               widget.toggleView();
                             },

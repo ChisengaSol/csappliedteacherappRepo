@@ -67,8 +67,6 @@ if(loginForm){
         //get mail and pword
         const email = loginForm['login-email'].value;
         const password = loginForm['login-password'].value;
-        // console.log(email);
-        // console.log(password);
     
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => {
@@ -101,14 +99,12 @@ const signupForm = document.querySelector("#register");
 if(signupForm){
     signupForm.addEventListener('submit',(e) => {
         e.preventDefault();
-    
+
         //get user info
         const email = signupForm['signup-email'].value;
         const password = signupForm['txtPassword'].value;
         const confirmpassword = signupForm['txtConfirmPassword'].value;
-        // console.log(email);
-        // console.log(password);
-
+ 
         if(password != confirmpassword){
             alert("Passwords do not match");
         }else{
@@ -131,11 +127,21 @@ if(signupForm){
     });
 
 }
-/////////////////////////////////////////////////////////////////////
 
 const subjectlist = document.querySelector("#selectsubject");
 //get subjects
 if(subjectlist){
+    auth.onAuthStateChanged(user =>{
+        if(user){
+            user.getIdTokenResult().then(idTokenResult => {
+                //console.log(idTokenResult.claims);
+                user.admin = idTokenResult.claims.admin;
+                setupUI(user);
+            });
+
+        }
+     });
+    
     function renderSubjects(doc){
         var firstname, lastname, teacher_longitude, teacher_latitude,
         teacher_gender,teacher_email,teacher_school,teacher_bio;
@@ -280,6 +286,99 @@ if(verificationDetails){
       });   
       
     });
+}
+
+const homeForm = document.querySelector("#home-id");
+if(homeForm){
+    auth.onAuthStateChanged(user =>{
+        if(user){
+            user.getIdTokenResult().then(idTokenResult => {
+                //console.log(idTokenResult.claims);
+                user.admin = idTokenResult.claims.admin;
+                setupUI(user);
+            });
+
+        }
+     });
+
+}
+
+const teachersList = document.querySelector("#teachers-id");
+if(teachersList){
+    console.log("Display teachers here");
+}
+
+const teacherRequests = document.querySelector("#requests-id");
+if(teacherRequests){
+    
+    function renderPendingTeachers(doc){
+        let li = document.createElement('li');
+        let teacherName = document.createElement('span');
+        let reject = document.createElement('button');
+        let approve = document.createElement('button');
+
+    
+        li.setAttribute('data-id', doc.id);
+        var fullName = doc.data().firstName + " " + doc.data().lastName;
+        teacherName.textContent = fullName;
+        approve.textContent = "Approve";
+        reject.textContent = "Reject";
+    
+        li.appendChild(teacherName);
+        li.appendChild(approve);
+        li.appendChild(reject);
+    
+        teacherRequests.appendChild(li);
+    
+    
+        //approving teachers
+        var fname, lname, dob, gender, school,userEmail, bio;
+        approve.addEventListener('click',(e) =>{
+            e.stopPropagation();
+            let id = e.target.parentElement.getAttribute('data-id');
+            var pendingUsers = db.collection('pendingaccounts').doc(id);
+            pendingUsers.get().then((doc) => {
+                console.log(doc.data());
+                fname = doc.data()['firstName'];
+                lname = doc.data()['lastName'];
+                // dob = doc.data()['dateOfBirth'];
+                // gender = doc.data()['gender'];
+                school = doc.data()['school'];
+                //userEmail = doc.email;//doc.data()['userEmail'];
+               // bio = doc.data()['bio'];
+                db.collection('pendingaccounts').doc(id).delete();           
+            });
+            if(fname != null){
+                db.collection('teachers').doc(id).set({
+                    firstName: fname,
+                    lastName: lname,
+                    //dateOfBirth: dob,
+                    //gender: gender,
+                    //location: gender,
+                    school: school,
+                    userEmail: "charles@gmail.com",
+                    //bio: bio,
+                });
+                db.collection('pendingaccounts').doc(id).delete();
+            }
+        });
+    
+        // //rejecting teachers
+        // reject.addEventListener('click',(e) => {
+        //     e.stopPropagation();
+        //     let id = e.target.parentElement.getAttribute('data-id');
+        //     db.collection('pendingaccounts').doc(id).delete();
+        // });
+    
+    }
+    
+    db.collection('pendingaccounts').get().then((snapshot) => {
+        //console.log(snapshot);
+        snapshot.docs.forEach(doc => {
+            renderPendingTeachers(doc);
+        });
+    });
+    
 }
 
 //logout

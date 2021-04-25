@@ -195,6 +195,23 @@ header{
   width: 50%;
   padding: 10px;
   text-align: left;
+  position: relative;
+}
+.center-div button{
+	color: red;
+	position: absolute;
+    right: 30px;
+    /* top: 5px; */
+	padding: 10px;
+}
+.center-div button:nth-child(2){
+	color: #00b712;
+	position: absolute;
+    right: 100px;
+    /* top:  */
+	/* height: 35px; */
+	
+	padding: 10px;
 }
 ul li{
 	list-style-type: none;

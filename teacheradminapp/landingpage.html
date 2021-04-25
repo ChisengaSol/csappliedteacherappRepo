@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div class="navbar">
+        <!-- <div class="navbar">
             <div class="navbar-inner"> 
                 <a href="#">Home</a>
                 <a href="subjects.html">Subjects</a>
@@ -30,7 +30,30 @@
                 </div>
              </div>
             <button class = "log-out" id="logout">Log out</button>
-          </div>
+          </div> -->
+          <div class="navbar">
+            <div class="navbar-inner"> 
+                <a href="landingpage.html">Home</a>
+                <a href="subjects.html">Subjects</a>
+                <a href="adminsubjects.html" class="admin">Admin Subjects</a>
+                <div class="dropdown admin">
+                <button class="dropbtn">People 
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="teachers.html">Teachers</a>
+                    <a href="#">Pupils</a>
+                    <a href="teacherrequests.html">Requests</a>
+                </div>
+                </div> 
+                <a href="">Chat</a>
+                <a href="account.html">Account</a>
+             </div>
+            <button class = "log-out" id="logout">Log out</button>
+        </div>
+        <div>
+            <div id = "home-id"></div>
+        </div>
           
         <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
@@ -38,7 +61,7 @@
         <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-functions.js"></script>
 
         <script src="scripts/authenticate.js"></script>
-        <script src="scripts/users.js"></script>
+        <script src="scripts/users.js"></script> 
         <!-- <script>
             firebase.auth().onAuthStateChanged(function(user){
                 if(user){

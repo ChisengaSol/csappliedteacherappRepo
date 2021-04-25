@@ -68,56 +68,57 @@ class _TeachersListState extends State<TeachersList> {
       appBar: AppBar(
         title: Text("Available teachers..."),
       ),
-      body: Container(
-        child: FutureBuilder(
-          future: _data,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Text("Loading..."),
-              );
-            } else {
-              //variables to hold teacher coords
-              double teacherLong, teacherLat;
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    //variables to hold teacher cordinates
-                    teacherLat = double.parse(
-                        snapshot.data[index].data()["teacher_lat"]);
-                    teacherLong = double.parse(
-                        snapshot.data[index].data()["teacher_long"]);
+      body: Padding(
+        padding: EdgeInsets.only(top: 20.0),
+              child: Container(
+          child: FutureBuilder(
+            future: _data,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: Text("Loading..."),
+                );
+              } else {
+                //variables to hold teacher coords
+                double teacherLong, teacherLat;
+                return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      //variables to hold teacher cordinates
+                      teacherLat = double.parse(
+                          snapshot.data[index].data()["teacher_lat"]);
+                      teacherLong = double.parse(
+                          snapshot.data[index].data()["teacher_long"]);
 
-                    //variable to store distance between a pupil and a teacher
-                    double teacherDistance = calculateDistance(
-                        myLatitude, myLongitude, teacherLat, teacherLong);
+                      //variable to store distance between a pupil and a teacher
+                      double teacherDistance = calculateDistance(
+                          myLatitude, myLongitude, teacherLat, teacherLong);
 
-                    return ListTile(
-                      // title: Text(snapshot.data[index].data()["firstName"] +
-                      //     ' ' +
-                      //     snapshot.data[index].data()["lastName"]),
-                      leading: Image(
-                        image: NetworkImage(
-                            'https://xenforo.com/community/data/avatars/o/202/202502.jpg'),
-                      ),
-                      title: Text(
-                        snapshot.data[index].data()["teacherName"],
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0,
+                      return ListTile(
+                        key: ValueKey("teachersKey"),
+                        leading: Image(
+                          image: NetworkImage(
+                              'https://xenforo.com/community/data/avatars/o/202/202502.jpg'),
                         ),
-                      ),
-                      subtitle: Text(
-                          "${teacherDistance.toStringAsFixed(2)} Km away from your location"),
-                      trailing: Icon(
-                        Icons.keyboard_arrow_right,
-                        size: 30.0,
-                      ),
-                      onTap: () => navigateToDetails(snapshot.data[index]),
-                    );
-                  });
-            }
-          },
+                        title: Text(
+                          snapshot.data[index].data()["teacherName"],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        subtitle: Text(
+                            "${teacherDistance.toStringAsFixed(2)} Km away from your location"),
+                        trailing: Icon(
+                          Icons.keyboard_arrow_right,
+                          size: 30.0,
+                        ),
+                        onTap: () => navigateToDetails(snapshot.data[index]),
+                      );
+                    });
+              }
+            },
+          ),
         ),
       ),
     );
@@ -143,96 +144,129 @@ class _TeacherDetailsState extends State<TeacherDetails> {
       appBar: AppBar(
         title: Text("About " + widget.teacher.data()["teacherName"]),
       ),
-      body: Column(
-        children: [
-          Container(
-            width: 100,
-            height: 100,
-            margin: EdgeInsets.only(
-              top: 30,
+      body: Padding(
+         padding: EdgeInsets.only(top: 20.0),
+              child: Column(
+      
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              margin: EdgeInsets.only(
+                top: 30,
+              ),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://xenforo.com/community/data/avatars/o/202/202502.jpg',
+                  ),
+                  fit: BoxFit.fill,
+                ), //it is NetworkImage because the image is being provided from the internet
+              ),
             ),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://xenforo.com/community/data/avatars/o/202/202502.jpg',
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 55,
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 20.0, right: 50.0),
+              alignment: Alignment.bottomRight,
+              child: FlatButton(
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Chatroom(teacherId: teacherId,pupilId: pupilId)));
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                fit: BoxFit.fill,
-              ), //it is NetworkImage because the image is being provided from the internet
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Center(
-            child: Text(
-              "Name: " + widget.teacher.data()["teacherName"],
-              style: TextStyle(
-                fontSize: 20.0,
+                child: Text(
+                  "Connect",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text(
-            "Email: " + widget.teacher.data()["teachermail"],
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text(
-            "Gender: " + widget.teacher.data()["teachersex"],
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text(
-            "School: " + widget.teacher.data()["teacherschool"],
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text(
-            "Bio: " + widget.teacher.data()["teacherbio"],
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          SizedBox(
-            height: 55,
-            width: double.infinity,
-            child: FlatButton(
-              color: Theme.of(context).primaryColor,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Chatroom(teacherId: teacherId,pupilId: pupilId)));
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                "Connect",
+            SizedBox(height: 20.0,),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 20.0, right: 20.0),              
+              child: Row(
+                children: [
+                  Icon(Icons.person, size: 25.0,),
+                  SizedBox(width: 8.0,),
+                  Text(
+                widget.teacher.data()["teacherName"],
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
               ),
+                ],
+              ),
             ),
-          ),
-        ],
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 20.0, right: 20.0),              
+              child: Row(
+                children: [
+                  Icon(Icons.mail, size: 25.0,),
+                  SizedBox(width: 8.0,),
+                  Text(
+                widget.teacher.data()["teachermail"],
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 20.0, right: 20.0),              
+              child: Row(
+                children: [
+                  Icon(Icons.school, size: 25.0,),
+                  SizedBox(width: 8.0,),
+                  Text(
+                widget.teacher.data()["teacherschool"],
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+              decoration: BoxDecoration(
+                color: Colors.green[100],
+                borderRadius: BorderRadius.circular(8)
+              ),
+              child: 
+              Text(
+                widget.teacher.data()["teacherbio"],
+                style: TextStyle(
+                  fontSize: 20.0,
+                
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

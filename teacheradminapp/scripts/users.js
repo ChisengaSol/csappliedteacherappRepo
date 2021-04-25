@@ -14,7 +14,7 @@
 //const db = firebase.firestore();
 //const functions = firebase.functions(); 
 
-const accountDetails = document.querySelector('.account-details');
+//const accountDetails = document.querySelector('.account-details');
 const adminTabs = document.querySelectorAll('.admin');
 const setupUI = (user) => {
     if(user.admin){

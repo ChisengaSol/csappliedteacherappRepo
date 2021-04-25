@@ -128,6 +128,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       // height: 45,
                       // width: 45,
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
                         gradient: LinearGradient(
                           colors: [
                             const Color(0x36ffffff),
@@ -137,7 +138,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
 
                       padding: EdgeInsets.all(12),
-                      child: Image.asset("assets/images/search.png"),
+                      child: Image.asset("assets/images/circle-cropped.png"),
                     ),
                   ),
                 ],

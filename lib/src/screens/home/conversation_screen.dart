@@ -88,17 +88,20 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                       child: Container(
                         // height: 45,
                         // width: 45,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color(0x36ffffff),
-                              const Color(0x0ffffff),
-                            ],
-                          ),
-                        ),
+                        // decoration: BoxDecoration(
+                        //   gradient: LinearGradient(
+                        //     colors: [
+                        //      // const Color(0x36ffffff),
+                        //      Colors.white,
+                        //       const Color(0x0ffffff),
+                        //     ],
+                        //   ),
+                        // ),
 
                         padding: EdgeInsets.all(12),
-                        child: Image.asset("assets/images/sent_icon.png"),
+                        child: Image.asset(
+                          "assets/images/circle-croppedsend.png"
+                        ),
                       ),
                     ),
                   ],

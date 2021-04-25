@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 
-class TutorList extends StatefulWidget {
+class SubjectsList extends StatefulWidget {
   @override
-  _TutorListState createState() => _TutorListState();
+  _SubjectsListState createState() => _SubjectsListState();
 }
 
-class _TutorListState extends State<TutorList> {
+class _SubjectsListState extends State<SubjectsList> {
   int _navCurrentIndex = 0;
   final tabs = [
-    Center(child: Text("Serch"),),
-    Center(child: Text("chats"),),
-    Center(child: Text("profile"),),
+    Center(
+      child: Text("chats"),
+    ),
+    Center(
+      child: Text("profile"),
+    ),
   ];
 
   Position _position;
@@ -57,40 +60,82 @@ class _TutorListState extends State<TutorList> {
     //returning list of subjects
     return Scaffold(
       body: Container(
-        child: FutureBuilder(
-          future: getSubjects(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Text('Loading...'),
-              );
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    //get id for a particular subject
-                    final String subjectId = snapshot.data[index].id;
-                    return ListTile(
-                      leading: Icon(Icons.book_outlined,size: 25.0,),
-                      title: Text(snapshot.data[index].data()["subject_name"].toUpperCase(),style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),),
-                      trailing: Icon(Icons.keyboard_arrow_right,size: 30.0,),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TeachersList(
-                                  subjectId: subjectId,
-                                  myLatitude: myLatitude,
-                                  myLongitude: myLatitude),
-                            ));
-                      },
-                    );
-                  });
-            }
-          },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 20.0,),
+              Container(
+                width: double.infinity,
+                height: 55.0,
+                margin: EdgeInsets.symmetric(horizontal: 18.0),
+                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(15.0)
+                  ),
+                  child: Center(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "search for subject",
+                        icon: Icon(Icons.search, size: 35.0,),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+              ),
+              SizedBox(height: 20.0,),
+              Container(
+                child: FutureBuilder(
+                  future: getSubjects(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: Text('Loading...'),
+                      );
+                    } else {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            //get id for a particular subject
+                            final String subjectId = snapshot.data[index].id;
+                            return ListTile(
+                              key: ValueKey("subjectsKey"),
+                              leading: Icon(
+                                Icons.book_outlined,
+                                size: 25.0,
+                              ),
+                              title: Text(
+                                snapshot.data[index]
+                                    .data()["subject_name"]
+                                    .toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                              trailing: Icon(
+                                Icons.keyboard_arrow_right,
+                                size: 30.0,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TeachersList(
+                                          subjectId: subjectId,
+                                          myLatitude: myLatitude,
+                                          myLongitude: myLatitude),
+                                    ));
+                              },
+                            );
+                          });
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -103,13 +148,8 @@ class _TutorListState extends State<TutorList> {
             backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble),
-            label: 'Chat',
+            label: 'Messages',
             backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(

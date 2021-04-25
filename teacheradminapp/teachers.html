@@ -10,29 +10,34 @@
 <body>
     <div class="navbar">
         <div class="navbar-inner"> 
-            <a href="landingpage.html" style="display:none;">Home</a>
-            <a href="subjects.html" style="display:none;">Subjects</a>
-            <a href="#" class="admin" style="display:none;">Admin Subjects</a>
-            <div class="dropdown admin" style="display:none;">
+            <a href="landingpage.html" >Home</a>
+            <a href="subjects.html" >Subjects</a>
+            <a href="#" class="admin" >Admin Subjects</a>
+            <div class="dropdown admin" >
             <button class="dropbtn">People 
                 <i class="fa fa-caret-down"></i>
             </button>
             <div class="dropdown-content admin">
                 <a href="#" >Teachers</a>
-                <a href="#" >Pupils</a>
-                <a href="#" >Requests</a>
+                <a href="pupils.html" >Pupils</a>
+                <a href="teacherrequests.html" >Requests</a>
             </div>
             </div> 
-            <a href="" style="display:none;">Chat</a>
-            <a href="account.html" style="display:none;">Account</a>
+            <a href="" >Chat</a>
+            <a href="account.html" >Account</a>
          </div>
-        <button class = "log-out" style="display:none;">Log out</button>
+        <button class = "log-out">Log out</button>
       </div>
 
     <form action="" class="admin-actions">
         <input type="email" id = "admin-email" placeholder="User Email" required>
         <button>Make Admin</button>
     </form>
+    <div>
+        <div>
+            <ul id="teachers-id"></ul>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
