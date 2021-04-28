@@ -169,30 +169,6 @@ class _TeacherDetailsState extends State<TeacherDetails> {
               height: 10,
             ),
             Container(
-              height: 55,
-              width: double.infinity,
-              margin: const EdgeInsets.only(left: 20.0, right: 50.0),
-              alignment: Alignment.bottomRight,
-              child: FlatButton(
-                color: Theme.of(context).primaryColor,
-                textColor: Colors.white,
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Chatroom(teacherId: teacherId,pupilId: pupilId)));
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "Connect",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20.0,),
-            Container(
               width: double.infinity,
               margin: const EdgeInsets.only(left: 20.0, right: 20.0),              
               child: Row(
@@ -249,19 +225,42 @@ class _TeacherDetailsState extends State<TeacherDetails> {
             SizedBox(
               height: 20.0,
             ),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-              decoration: BoxDecoration(
-                color: Colors.green[100],
-                borderRadius: BorderRadius.circular(8)
-              ),
-              child: 
-              Text(
-                widget.teacher.data()["teacherbio"],
-                style: TextStyle(
-                  fontSize: 20.0,
+            // Container(
+            //   width: double.infinity,
+            //   margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+            //   decoration: BoxDecoration(
+            //     color: Colors.green[100],
+            //     borderRadius: BorderRadius.circular(8)
+            //   ),
+            //   child: 
+            //   Text(
+            //     widget.teacher.data()["teacherbio"],
+            //     style: TextStyle(
+            //       fontSize: 20.0,
                 
+            //     ),
+            //   ),
+            // ),
+            Container(
+              height: 60,
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+              alignment: Alignment.center,
+              child: FlatButton(
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Chatroom(teacherId: teacherId,pupilId: pupilId)));
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: Text(
+                  "Connect",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
               ),
             ),

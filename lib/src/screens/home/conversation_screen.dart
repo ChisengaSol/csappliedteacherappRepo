@@ -65,7 +65,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             Container(
               alignment: Alignment.bottomCenter,
               child: Container(
-                color: Colors.amber,
+                color: Colors.grey[300],
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Row(
                   children: [
@@ -131,17 +131,17 @@ class MessagesTile extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           margin: EdgeInsets.symmetric(vertical: 8),          
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: isSEntByMe ? [
-                const Color(0xff007ef4),
-                const Color(0xff2a75bc)
-              ]
-                 : [
+            // gradient: LinearGradient(
+            //   colors: isSEntByMe ? [
+            //     const Colors.grey[300],
+            //   ]
+            //      : [
 
-                   const Color(0x1affffff),
-                   const Color(0x1affffff)
-                 ],
-            ),
+            //        const Color(0x1affffff),
+            //        const Color(0x1affffff)
+            //      ],
+            // ),
+            color: isSEntByMe ? Colors.green[100] : Colors.grey[300],
             borderRadius: isSEntByMe ? BorderRadius.only(
               topLeft: Radius.circular(23),
               topRight: Radius.circular(23),
@@ -155,7 +155,7 @@ class MessagesTile extends StatelessWidget {
         child: Text(
           message,
           style: TextStyle(
-            color: Colors.green,
+            color: Colors.white,
             fontSize: 17,
           ),
         ),

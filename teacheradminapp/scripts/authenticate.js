@@ -112,8 +112,11 @@ if(signupForm){
             .then((userCredential) => {
                 // Signed in 
                 var user = userCredential.user;
-                console.log(user.data());
-                // ...
+                //console.log(user.data());
+                // add teacher to users collection
+                return db.collection('users').doc(user.uid).set({
+                    email: user.email,
+                });
             })
             .catch((error) => {
                 var errorCode = error.code;
@@ -275,15 +278,26 @@ if(verificationDetails){
     verificationDetails.addEventListener('submit',(e) => {
         var user = firebase.auth().currentUser;
         //console.log("The id is: ", user.uid);
+        var fname = verificationDetails['first-name'].value;
+        var lname = verificationDetails['last-name'].value;
+        var schl = verificationDetails['school'].value;
+        var subj = verificationDetails['subject'].value;
+        var adrss = verificationDetails['school-address'].value;
+        var tel = verificationDetails['school-tel'].value;
+        var mail = verificationDetails['school-email'].value;
+
+        if(schl != null && subj != null){
         
-        db.collection('pendingaccounts').doc(user.uid).set({        
-        firstName: verificationDetails['first-name'].value,
-        lastName: verificationDetails['last-name'].value,
-        school: verificationDetails['school'].value,
-        schoolAddress: verificationDetails['school-address'].value,
-        schoolTel: verificationDetails['school-tel'].value,
-        schoolEmail: verificationDetails['school-email'].value,
-      });   
+            db.collection('pendingaccounts').doc(user.uid).set({        
+                firstName: fname,
+                lastName: lname,
+                school: schl,
+                subject: subj,
+                schoolAddress: adrss,
+                schoolTel: tel,
+                schoolEmail: mail,
+            });  
+        }
       
     });
 }
