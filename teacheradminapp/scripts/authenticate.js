@@ -285,6 +285,7 @@ if(verificationDetails){
         var adrss = verificationDetails['school-address'].value;
         var tel = verificationDetails['school-tel'].value;
         var mail = verificationDetails['school-email'].value;
+        console.log(fname);
 
         if(schl != null && subj != null){
         
@@ -292,6 +293,7 @@ if(verificationDetails){
                 firstName: fname,
                 lastName: lname,
                 school: schl,
+                usermail: user.email,
                 subject: subj,
                 schoolAddress: adrss,
                 schoolTel: tel,
@@ -346,23 +348,36 @@ if(teacherRequests){
     
     
         //approving teachers
-        var fname, lname, dob, gender, school,userEmail, bio;
+        var fname, lname, dob, gender, school,usermail, bio;
         approve.addEventListener('click',(e) =>{
             e.stopPropagation();
             let id = e.target.parentElement.getAttribute('data-id');
             var pendingUsers = db.collection('pendingaccounts').doc(id);
             pendingUsers.get().then((doc) => {
-                console.log(doc.data());
+
                 fname = doc.data()['firstName'];
                 lname = doc.data()['lastName'];
                 // dob = doc.data()['dateOfBirth'];
                 // gender = doc.data()['gender'];
                 school = doc.data()['school'];
-                //userEmail = doc.email;//doc.data()['userEmail'];
+                usermail =  doc.data()['usermail'];
                // bio = doc.data()['bio'];
-                db.collection('pendingaccounts').doc(id).delete();           
+               // db.collection('pendingaccounts').doc(id).delete();           
             });
             if(fname != null){
+                console.log(doc.data());
+                //sendEmail(usermail, fname, lname);
+                Email.send({
+                    Host: "smtp.gmail.com",
+                    Username : "zambezimusiccache@gmail.com",
+                    Password : "@ynot2021",
+                    To : usermail,
+                    From : "zambezimusiccache@gmail.com",
+                    Subject : "Request Approved",
+                    Body : `Dear ${fname} ${lname},\nThank you for the request to be nearby Teacher.`,
+                    }).then(
+                        message => alert("mail sent successfully to" + usermail)
+                    );
                 db.collection('teachers').doc(id).set({
                     firstName: fname,
                     lastName: lname,
@@ -370,7 +385,7 @@ if(teacherRequests){
                     //gender: gender,
                     //location: gender,
                     school: school,
-                    userEmail: "charles@gmail.com",
+                    userEmail: usermail,
                     //bio: bio,
                 });
                 db.collection('pendingaccounts').doc(id).delete();
@@ -407,5 +422,29 @@ if(logout){
     });
 }
 
+//function to send email to successful teacher
+// function sendEmail(recieverEmail, receiverFname, recieverLname) {
+// 	Email.send({
+// 	Host: "smtp.gmail.com",
+// 	Username : "zambezimusiccache@gmail.com",
+// 	Password : "@ynot2021",
+// 	To : `${recieverEmail}`,
+// 	From : "zambezimusiccache@gmail.com",
+// 	Subject : "Request Approved",
+// 	Body : `Dear ${receiverFname} ${recieverLname},\nThank you for the request to be nearby Teacher.`,
+// 	}).then(
+// 		message => alert("mail sent successfully to" + recieverEmail)
+// 	);
+// }
 
+// function verificMail(params, pfname){
+//     var tempParams = {
+//         from_name: "Nearby Teacher Finder",
+//         to_name: pfname,
+//         message: " "
+//     };
 
+//     emailjs.send('service_mreb1nr','template_er80h1i',tempParams).then(function(res){
+
+//     })
+// }
