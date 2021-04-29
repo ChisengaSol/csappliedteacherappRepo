@@ -410,6 +410,35 @@ if(teacherRequests){
     
 }
 
+//grab chatrooms
+const chatrooms = document.querySelector("#chatrooms-id");
+if(chatrooms){
+    //create element and render chatrooms
+    function renderChatrooms(doc){
+        let li = document.createElement('li');
+        let chatroomId = document.createElement('span');
+
+        li.setAttribute('data-id',doc.id);
+        chatroomId.textContent = doc.data().chatroomId;
+
+        li.appendChild(chatroomId);
+
+        chatrooms.appendChild(li);
+    }
+    auth.onAuthStateChanged(user =>{
+        if(user){
+            console.log(user.email);
+            db.collection('chatroom').get().then((snapshot) => {
+                snapshot.docs.forEach(doc => {
+                    renderChatrooms(doc);
+                });
+            });
+        }
+    });
+    
+    //console.log(auth.currentUser.email);
+}
+
 //logout
 const logout = document.querySelector("#logout");
 if(logout){
