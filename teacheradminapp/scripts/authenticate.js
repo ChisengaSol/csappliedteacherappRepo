@@ -413,31 +413,101 @@ if(teacherRequests){
 //grab chatrooms
 const chatrooms = document.querySelector("#chatrooms-id");
 if(chatrooms){
+    auth.onAuthStateChanged(user =>{
+        if(user){
+    
     //create element and render chatrooms
     function renderChatrooms(doc){
         let li = document.createElement('li');
         let chatroomId = document.createElement('span');
+        let arrow = document.createElement('div');
 
         li.setAttribute('data-id',doc.id);
         chatroomId.textContent = doc.data().chatroomId;
+        arrow.textContent = '>';
 
         li.appendChild(chatroomId);
+        li.appendChild(arrow);
 
         chatrooms.appendChild(li);
+
+        //redirecting to the conversations page
+        arrow.addEventListener('click', (e) =>{
+            e.stopPropagation();
+            let id = e.target.parentElement.getAttribute('data-id');
+           // console.log(id);
+            //window.location.href = '/teacheradminapp/conversations.html';
+            togglePopup();
+            
+            // if(convMessages){
+            //     let id = e.target.parentElement.getAttribute('data-id');
+                
+            //     db.collection('chatroom').get().then((snapshot) => {
+            //         console.log(snapshot.docs);
+            //         console.log(id);
+            //     });
+            // }
+            const convMessages = document.querySelector('#my-convos');
+            const msgForm = document.querySelector('#message-form');
+
+            function renderConvos(doc){
+                
+                let li = document.createElement('li');
+                let message = document.createElement('span');
+
+                li.setAttribute('data-id',doc.id);
+                message.textContent = doc.data().message;
+            
+                li.appendChild(message);
+            
+                convMessages.appendChild(li);
+            
+            }
+            db.collection('chatroom').doc(id).collection('chats').orderBy('time',"asc").get().then((snapshot) => {
+                console.log(snapshot.docs);
+                console.log(id);
+                snapshot.docs.forEach(doc => {
+                    renderConvos(doc);
+                    //console.log(doc.data());
+                });
+                
+            });
+
+            msgForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                db.collection('chatroom').doc(id).collection('chats').add({
+                    message: msgForm.message.value,
+                    sendBy: user.email,
+                    time: Date.now(),
+                });
+                msgForm.message.value = '';
+            });
+        });
     }
-    auth.onAuthStateChanged(user =>{
-        if(user){
+    
             console.log(user.email);
-            db.collection('chatroom').get().then((snapshot) => {
+            db.collection('chatroom').where("users", "array-contains", user.email).get().then((snapshot) => {
                 snapshot.docs.forEach(doc => {
                     renderChatrooms(doc);
                 });
             });
+
         }
     });
     
     //console.log(auth.currentUser.email);
 }
+
+//conversations
+// const convMessages = document.querySelector('#popup-1');
+// if(convMessages){
+//     let id = e.target.parentElement.getAttribute('data-id');
+    
+//     db.collection('chatroom').get().then((snapshot) => {
+//         console.log(snapshot.docs);
+//         console.log(id);
+//     });
+// }
 
 //logout
 const logout = document.querySelector("#logout");
@@ -445,11 +515,16 @@ if(logout){
     logout.addEventListener("click",(e) => {
         //e.preventDefault();
         auth.signOut().then(() => {
-            window.location.href = '/authentication.html';
+            window.location.href = '/teacheradminapp/authentication.html';
         });
         alert("signed out");
     });
 }
+
+function togglePopup(){
+    document.getElementById("popup-1").classList.toggle("active");
+}
+
 
 //function to send email to successful teacher
 // function sendEmail(recieverEmail, receiverFname, recieverLname) {
@@ -477,3 +552,4 @@ if(logout){
 
 //     })
 // }
+

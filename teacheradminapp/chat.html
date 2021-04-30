@@ -1,35 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chats doc</title>
-</head>
-<body>
-    <!-- <form onabort="return sendMessage();">
-        <input type="text" name="" id="message" placeholder="Enter messge"><br>
-        <input type="submit">
-    </form> -->
-    <!--step 1: return all chatrooms.-->
-    <ul id= "chatrooms-id"></ul>
-    <!--step 2: return all chatrooms with email at either index 0, or index 1 from users' array-->
-    <!-- <script>
-        function sendMessage(){
-            //get message
-            var message = document.getElementById('message').value;
+<html>
+    <head>
+        <title>chats doc</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <style>
+            body{
+                /* background: #eab0dc; */
+                font-family: ubuntu;
+            }
 
+            h1{
+                color: #fff;
+                font-size: 64px;
+                letter-spacing: 2px;
+                margin-top: 80px;
+                text-align: center;
+            }
 
-            //prevent form from submitting
-            return false;
-        }   
-    </script> -->
-    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-functions.js"></script>
+            .content{
+                background: #fff;
+                max-width: 960px;
+                margin: 30px auto;
+                padding:  20px 30px;
+                border-radius: 10px 120px 10px 10px;
+                box-shadow: 1px 3px 5px rgba(0,0,0,0.1)
+            }
 
-    <script src="scripts/authenticate.js"></script>
-        <script src="scripts/users.js"></script> 
-</body>
+            ul{
+                list-style-type: none;
+                padding: 0;
+            }
+
+            li{
+                padding: 20px;
+                background: #D3D3D3;
+                font-size: 20px;
+                color:#D3D3D3;
+                position: relative;
+                border-bottom: 1px solid #e6e6e6;
+                height: 46px;
+                border-radius: 15px;
+            }
+
+            /* li:nth-child(even){
+                padding: 20px;
+                background: #f2f2f2;
+            } */
+
+            li span{
+                display: block;
+            }
+
+            /* li span:nth-child(2){
+                font-size: 16px;
+                margin-top: 6px;
+                color: #999;
+            } */
+
+            li div{
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(255,255,255,0.6);
+                width: 40px;
+                text-align: center;
+                padding: 10px 0;
+                font-weight:  bold;
+                cursor:  pointer;
+            }
+
+            form input{
+                float: left;
+                width: 38%;
+                margin: 0;
+                border: 0;
+                border-bottom: 1px solid #eee;
+                margin: 0 1%;
+                padding: 10px;
+                display: block;
+                box-sizing: border-box;
+                font-size: 18px;
+            }
+
+            form input:focus{
+                outline: none;
+                border-bottom: 3px solid #88236f;
+                padding-bottom: 8px;
+                transition: all ease 0.2s;
+            }
+
+            form:after{
+                content: '';
+                clear: both;
+                display: block;
+            }
+
+            #add-button{
+                border: 0;
+                background: #fff;
+                border-radius: 10px;
+                padding: 13px;
+                width: 14%;
+                box-shadow: -1px 0px 1px rgba(0,0,0,0.1);
+                font-weight: bold;
+                font-family: ubuntu;
+                letter-spacing: 1px;
+                color: #999;
+            }
+            /*popup CSS starts hear*/
+            .popup .overlay {
+            position:fixed;
+            top:0px;
+            left:0px;
+            width:100vw;
+            height:100vh;
+            background:rgba(0,0,0,0.7);
+            z-index:1;
+            display:none;
+            }
+            
+            .popup .content {
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%) scale(0);
+            background:#fff;
+            width:500px;
+            height:250px;
+            z-index:2;
+            text-align:center;
+            padding:20px;
+            box-sizing:border-box;
+            font-family:"Open Sans",sans-serif;
+            }
+            
+            .popup .close-btn {
+            cursor:pointer;
+            position:absolute;
+            right:20px;
+            top:20px;
+            width:30px;
+            height:30px;
+            background:#222;
+            color:#fff;
+            font-size:25px;
+            font-weight:600;
+            line-height:30px;
+            text-align:center;
+            border-radius:50%;
+            }
+            
+            .popup.active .overlay {
+            display:block;
+            }
+            
+            .popup.active .content {
+            transition:all 300ms ease-in-out;
+            transform:translate(-50%,-50%) scale(1);
+            }
+            
+            /* button {
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            padding:15px;
+            font-size:18px;
+            border:2px solid #222;
+            color:#222;
+            text-transform:uppercase;
+            font-weight:600;
+            background:#fff;
+            } */
+
+        </style>
+    </head>
+    <body>
+        <div class="navbar">
+            <div class="navbar-inner"> 
+                <a href="landingpage.html">Home</a>
+                <a href="subjects.html" >Subjects</a>
+                <a href="adminsubjects.html" class="admin" >Admin Subjects</a>
+                <div class="dropdown admin">
+                <button class="dropbtn ">People 
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="teachers.html" >Teachers</a>
+                    <a href="pupils.html" >Pupils</a>
+                    <a href="teacherrequests.html" >Requests</a>
+                </div>
+                </div> 
+                <a href="#">Chat</a>
+                <a href="account.html">Account</a>
+                <div>
+                    <ul id="user-details"></ul>
+                </div>
+             </div>
+            <button class = "log-out" id="logout">Log out</button>
+          </div>
+
+          <div id="modal-teacher-subjects" class="modal">
+              
+            <div class="container center-div" style="margin-top: 40px;"> 
+                <h4 style="text-align: center;">My Chats</h4>                
+                <ul id= "chatrooms-id"></ul>
+            
+            </div>   
+            <div class="popup" id="popup-1">
+                <div class="overlay"></div>
+                <div class="content">
+                  <div class="close-btn" onclick="togglePopup()">&times;</div>
+                  <h1>Title</h1>
+                  <ul id= "my-convos"></ul>
+                  <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo aspernatur laborum rem sed laudantium excepturi veritatis voluptatum architecto, dolore quaerat totam officiis nisi animi accusantium alias inventore nulla atque debitis.</p> -->
+                  <form action="" id="message-form">
+                      <input type="text" name="message" id="" placeholder="write message...">
+                      <button>Send</button>
+                  </form>
+                </div>
+              </div>
+               
+              <!-- <button onclick="togglePopup()">Show Popup</button>    -->
+          </div>
+          
+          
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-functions.js"></script>
+
+        <script src="scripts/authenticate.js"></script>
+        <script src="scripts/users.js"></script>
+        <!-- <script>
+            firebase.auth().onAuthStateChanged(function(user){
+                if(user){
+                    window.location.href = "authentication.html";
+                }
+            });
+        </script> -->
+    </body>
 </html>
