@@ -152,48 +152,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-//create chatroom, send user to conversation screen
-
-// class SearchTile extends StatelessWidget {
-//   final String userEmail;
-//   SearchTile({this.userEmail});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-//       child: Row(
-//         children: [
-//           Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(
-//                 userEmail,
-//               ),
-//             ],
-//           ),
-//           Spacer(),
-//           GestureDetector(
-//             onTap: () {
-//               createChatroomAndStartConvo()
-//             },
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 color: Colors.green,
-//                 borderRadius: BorderRadius.circular(30),
-//               ),
-//               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-//               child: Text(
-//                 "Message",
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 getChatrromId(String a, String b) {
   if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
     return "$b\_$a";

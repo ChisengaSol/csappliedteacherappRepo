@@ -10,6 +10,8 @@ class SubjectsList extends StatefulWidget {
 }
 
 class _SubjectsListState extends State<SubjectsList> {
+  
+
   int _navCurrentIndex = 0;
   final tabs = [
     Center(
@@ -63,27 +65,33 @@ class _SubjectsListState extends State<SubjectsList> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20.0,),
+              SizedBox(
+                height: 20.0,
+              ),
               Container(
                 width: double.infinity,
                 height: 55.0,
                 margin: EdgeInsets.symmetric(horizontal: 18.0),
                 padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(15.0)
-                  ),
-                  child: Center(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "search for subject",
-                        icon: Icon(Icons.search, size: 35.0,),
-                        border: InputBorder.none,
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(15.0)),
+                child: Center(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "search for subject",
+                      icon: Icon(
+                        Icons.search,
+                        size: 35.0,
                       ),
+                      border: InputBorder.none,
                     ),
                   ),
+                ),
               ),
-              SizedBox(height: 20.0,),
+              SizedBox(
+                height: 20.0,
+              ),
               Container(
                 child: FutureBuilder(
                   future: getSubjects(),
@@ -125,7 +133,7 @@ class _SubjectsListState extends State<SubjectsList> {
                                       builder: (context) => TeachersList(
                                           subjectId: subjectId,
                                           myLatitude: myLatitude,
-                                          myLongitude: myLatitude),
+                                          myLongitude: myLongitude),
                                     ));
                               },
                             );

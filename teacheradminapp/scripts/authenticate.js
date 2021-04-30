@@ -439,14 +439,6 @@ if(chatrooms){
             //window.location.href = '/teacheradminapp/conversations.html';
             togglePopup();
             
-            // if(convMessages){
-            //     let id = e.target.parentElement.getAttribute('data-id');
-                
-            //     db.collection('chatroom').get().then((snapshot) => {
-            //         console.log(snapshot.docs);
-            //         console.log(id);
-            //     });
-            // }
             const convMessages = document.querySelector('#my-convos');
             const msgForm = document.querySelector('#message-form');
 
@@ -497,17 +489,6 @@ if(chatrooms){
     
     //console.log(auth.currentUser.email);
 }
-
-//conversations
-// const convMessages = document.querySelector('#popup-1');
-// if(convMessages){
-//     let id = e.target.parentElement.getAttribute('data-id');
-    
-//     db.collection('chatroom').get().then((snapshot) => {
-//         console.log(snapshot.docs);
-//         console.log(id);
-//     });
-// }
 
 //logout
 const logout = document.querySelector("#logout");
