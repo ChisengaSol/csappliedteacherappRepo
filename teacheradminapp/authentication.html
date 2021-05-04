@@ -58,26 +58,26 @@
                 z.style.left = "0px";               
             }
             ////////////geolocation function////////////
-            const successCallback = (position) => {
-                console.log(position);
-                const lati = position.coords.latitude;
-                const longi = position.coords.longitude;
-                // console.log(lati);
-                // console.log(longi);
-                document.getElementById("long").value = longi;
-                document.getElementById("lat").value = lati;
+            // const successCallback = (position) => {
+            //     console.log(position);
+            //     const lati = position.coords.latitude;
+            //     const longi = position.coords.longitude;
+            //     // console.log(lati);
+            //     // console.log(longi);
+            //     document.getElementById("long").value = longi;
+            //     document.getElementById("lat").value = lati;
                 
-            }
-            const errorCallback = (error) => {
-                console.error(error);
-            }
-            function getUserLocation(){
-                if(navigator.geolocation){
-                navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
-                }else{
-                console.log('UnSupported');
-                }
-            }
+            // }
+            // const errorCallback = (error) => {
+            //     console.error(error);
+            // }
+            // function getUserLocation(){
+            //     if(navigator.geolocation){
+            //     navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
+            //     }else{
+            //     console.log('UnSupported');
+            //     }
+            // }
             // navigator.geolocation.getCurrentPosition(successCallback,errorCallback);
 
             //////////////////////////////////////////

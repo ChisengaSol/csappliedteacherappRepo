@@ -170,7 +170,6 @@ if(subjectlist){
             db.collection('teachers').doc(user.uid).get().then((doc) => {
                 firstname= doc.data()['firstName'];
                 lastname = doc.data()['lastName'];
-                teacher_gender = doc.data()['gender'];
                 teacher_school = doc.data()['school'];
                 teacher_email = doc.data()['userEmail'];
                 teacher_bio = doc.data()['bio'];
@@ -415,6 +414,11 @@ const chatrooms = document.querySelector("#chatrooms-id");
 if(chatrooms){
     auth.onAuthStateChanged(user =>{
         if(user){
+            user.getIdTokenResult().then(idTokenResult => {
+                //console.log(idTokenResult.claims);
+                user.admin = idTokenResult.claims.admin;
+                setupUI(user);
+            });
     
     //create element and render chatrooms
     function renderChatrooms(doc){
@@ -439,25 +443,10 @@ if(chatrooms){
             //window.location.href = '/teacheradminapp/conversations.html';
             togglePopup();
             
-            const convMessages = document.querySelector('#my-convos');
             const msgForm = document.querySelector('#message-form');
 
-            function renderConvos(doc){
-                
-                let li = document.createElement('li');
-                let message = document.createElement('span');
-
-                li.setAttribute('data-id',doc.id);
-                message.textContent = doc.data().message;
-            
-                li.appendChild(message);
-            
-                convMessages.appendChild(li);
-            
-            }
+           
             db.collection('chatroom').doc(id).collection('chats').orderBy('time',"asc").get().then((snapshot) => {
-                console.log(snapshot.docs);
-                console.log(id);
                 snapshot.docs.forEach(doc => {
                     renderConvos(doc);
                     //console.log(doc.data());
@@ -496,7 +485,7 @@ if(logout){
     logout.addEventListener("click",(e) => {
         //e.preventDefault();
         auth.signOut().then(() => {
-            window.location.href = '/teacheradminapp/authentication.html';
+            window.location.href = '/authentication.html';
         });
         alert("signed out");
     });
@@ -534,3 +523,105 @@ function togglePopup(){
 //     })
 // }
 
+//render conversations
+const convMessages = document.querySelector('#my-convos');
+function renderConvos(doc){
+                
+    let li = document.createElement('li');
+    let message = document.createElement('span');
+
+    li.setAttribute('data-id',doc.id);
+    message.textContent = doc.data().message;
+
+    li.appendChild(message);
+
+    convMessages.appendChild(li);
+
+}
+
+
+//show a popup to get user's location
+const loginPopup = document.querySelector(".login-popup");
+const close = document.querySelector(".close");
+
+
+window.addEventListener("load",function(){
+
+ showPopup();
+ // setTimeout(function(){
+ //   loginPopup.classList.add("show");
+ // },5000)
+
+})
+
+function showPopup(){
+      const timeLimit = 5 // seconds;
+      let i=0;
+      const timer = setInterval(function(){
+       i++;
+       if(i == timeLimit){
+        clearInterval(timer);
+        loginPopup.classList.add("show");
+       } 
+       console.log(i)
+      },1000);
+}
+
+
+close.addEventListener("click",function(){
+  loginPopup.classList.remove("show");
+})
+
+//get user's location
+const trackLocation = document.querySelector('#location-btn');
+if(trackLocation){
+    
+    auth.onAuthStateChanged(user => {
+        if(user){
+            /*checks if user exists in the userlocations collection. The doc Id is User Id.
+            If it does not exist, it will add the doc to the collection*/
+            const userLocations = db.collection('userlocations').doc(user.uid);
+
+       
+            trackLocation.addEventListener('click',(e) => {
+                e.preventDefault();
+                //console.log("We are here bitches");
+                const successCallback = (position) => {
+                    console.log(position);
+                    const lati = position.coords.latitude;
+                    const longi = position.coords.longitude;
+                    userLocations.get().then((docSnapshot) => {
+                        if(docSnapshot.exists){
+                            userLocations.onSnapshot((doc) => {
+                                console.log("Already exists");
+                            });
+                        }else{
+                            userLocations.set({
+                                userid: user.uid,
+                                latitude: lati,
+                                longitude: longi,
+                            });
+                        }
+                    });
+                }
+                const errorCallback = (error) => {
+                    console.error(error);
+                }
+                navigator.geolocation.getCurrentPosition(successCallback,errorCallback);          
+        
+
+            });
+        }
+    });
+}
+
+
+//closes popup when "Allow" button is clocked
+function toggleLocationPopup(){
+    let theDiv = document.getElementById("popup-id");
+    if(theDiv.style.visibility === 'hidden'){
+        theDiv.style.visibility = 'visible';
+      } else {
+        theDiv.style.visibility = 'hidden';
+      }
+}

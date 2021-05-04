@@ -181,8 +181,6 @@ class _TeacherDetailsState extends State<TeacherDetails> {
     } else {
       print("You cant send messages to yourself");
     }
-    // print(user.email);
-    // print(userEmail);
   }
 
   @override
@@ -315,15 +313,7 @@ class _TeacherDetailsState extends State<TeacherDetails> {
               child: FlatButton(
                 color: Theme.of(context).primaryColor,
                 textColor: Colors.white,
-                // onPressed: () {
-                //   Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => Chatroom(
-                //               teacherId: teacherId, pupilId: pupilId)));
-                // },
                 onPressed: () {
-                  // createChatroomAndStartConvo();
                   createChatroomAndStartConvo(
                     userEmail: teacherEmail,
                   );
