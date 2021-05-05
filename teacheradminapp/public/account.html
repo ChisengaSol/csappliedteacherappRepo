@@ -36,7 +36,7 @@
               <!-- <section id="id-profile-pic-view">
                   
             </section> -->
-              <section id="profile-update">
+              <!-- <section id="profile-update">
                     <form action="">
                         
                             <input type="file" name="" onchange="chooseFile(event)" ><br>
@@ -46,7 +46,12 @@
                             <button>Update details</button>
                         </div> 
                     </form>
-              </section>
+              </section> -->
+              <input type="file" id="files" name="Files[]" onchange="uploadData()" multiple><br> <!--onchange="uploadData()"-->
+              <div id = "upload-descrip">
+                <textarea name="" id="" cols="100" rows="10" maxlength="600" placeholder="Type your bio maximum length 600 characters"></textarea><br>
+                <button>Submit</button>
+              </div>
           </div>
           
         <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>

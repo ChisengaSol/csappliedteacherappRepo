@@ -576,21 +576,6 @@ function togglePopup(){
     document.getElementById("popup-1").classList.toggle("active");
 }
 
-
-
-
-// function verificMail(params, pfname){
-//     var tempParams = {
-//         from_name: "Nearby Teacher Finder",
-//         to_name: pfname,
-//         message: " "
-//     };
-
-//     emailjs.send('service_mreb1nr','template_er80h1i',tempParams).then(function(res){
-
-//     })
-// }
-
 //render conversations
 const convMessages = document.querySelector('#my-convos');
 function renderConvos(doc){
@@ -701,52 +686,62 @@ const profilePicView = document.querySelector("#id-profile-pic-view");
 const teacherDetailsId = document.querySelector("#update-info-view");
 let img = document.getElementById("img"),
     profileUpdate = document.getElementById("profile-update");
-//updating user details
 
+///////////////////////////////
+const updateBio = document.querySelector("#upload-descrip");
+// let storageRef = firebase.storage().ref('Images');
 
-// function updateTeacherDetails(){
-//     stopPropagation();
-//     //update profile db should come here
-//     // auth.onAuthStateChanged(user => {
-//     //     firebase.storage().ref('updatedTeacherDetails/' + user.uid + '/profile.jpg').put(file).then(function(){
-//     //         console.log("successfully uploaded");
-//     //     }).catch(err => {
-//     //         console.log(err.message);
-//     //     });;
-//     // });
-//     //alert("Funny bitch");
-//     console.log("Funny I lost my drive when I lost card");
-
+// if(updateBio){
+//     let file = document.getElementById('files').files[0];
+//     auth.onAuthStateChanged(user => {
+//         if(user){
+//             // updateBio.addEventListener('click', (e) => {
+//             //     console.log(file);
+//             // });
+//             //console.log(uploadData());
+        
+//         }
+//     });
 // }
-let file = {};
-function chooseFile(e){
-    file = e.target.files[0];
-}
-if(teacherDetailsId){
-    teacherDetailsId.addEventListener('click', (e) => {
-        e.preventDefault();
-        //update profile db should come here
-        auth.onAuthStateChanged(user => {
-            firebase.storage().ref('updatedTeacherDetails/' + user.uid + file.name).put(file).then(function(){
-                console.log("successfully uploaded");
-            }).catch(err => {
-                console.log(err.message);
-            });;
-        });
-        //console.log("Funny bitch");
-    });
-}
 
-//get user profile picture
-auth.onAuthStateChanged(user => {
-    if(user){
-        firebase.storage().ref('updatedTeacherDetails/' + user.uid + file.name).getDownloadURL().then(imgUrl => {
-            console.log(imgUrl);
-            console.log("File name is" + file.name);
-            img.src = imgUrl;
-        });
-    }
-});
+let storageRef = firebase.storage().ref('Images');
+function uploadData(){
+    auth.onAuthStateChanged(user => {
+        if(user){
+            // updateBio.addEventListener('click', (e) => {
+            //     console.log(file);
+            // });
+            //console.log(uploadData());
+            let file = document.getElementById('files').files[0];
+            var filename = "";
+            filename = file.name;
+            let thisRef = storageRef.child(file.name);
+            thisRef.put(file).then(res => {
+                //console.log(res);
+                alert("Upload successful");
+                // return file.name;
+             }).catch(err => {
+                 console.log(err.message);
+             });
+
+             storageRef.child(filename).getDownloadURL().then(url => {
+                //console.log(url);
+                //photoUrl = url;
+                db.collection('user_photos').doc(user.uid).set({
+                    userId: user.uid,
+                    photoUrl: url,
+                }).catch(err => {
+                    console.log(err.message);
+                });
+                }).catch(err => {
+                    console.log(err.message);
+            });
+            
+        
+        }
+    });   
+
+}
 
 //display teachers 
 const teachersId = document.querySelector("#teachers-id");
