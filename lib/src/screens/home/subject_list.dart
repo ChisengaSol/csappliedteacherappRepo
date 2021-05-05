@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csappliedteacherapp/src/screens/home/subject_tutors_list.dart';
+import 'package:csappliedteacherapp/src/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
+
+import 'subject_search.dart';
 
 class SubjectsList extends StatefulWidget {
   @override
@@ -10,17 +13,41 @@ class SubjectsList extends StatefulWidget {
 }
 
 class _SubjectsListState extends State<SubjectsList> {
-  
+  final AuthService _auth = AuthService();
 
-  int _navCurrentIndex = 0;
-  final tabs = [
-    Center(
-      child: Text("chats"),
-    ),
-    Center(
-      child: Text("profile"),
-    ),
-  ];
+  //for the search
+  var queryResultSet = [];
+  var tempSearchStore = [];
+
+  initiateSearch(value) {
+    if (value.length == 0) {
+      setState(() {
+        queryResultSet = [];
+        tempSearchStore = [];
+      });
+    }
+
+    var capitalizeValue =
+        value.substring(0, 1).toUpperCase() + value.substring(1);
+    if (queryResultSet.length == 0 && value.length == 1) {
+      SubjectSearchService()
+          .searchBySubject(value)
+          .then((QuerySnapshot documents) {
+        for (int i = 0; i < documents.docs.length; ++i) {
+          queryResultSet.add(documents.docs[i].data());
+        }
+      });
+    } else {
+      tempSearchStore = [];
+      queryResultSet.forEach((element) {
+        if (element['subject_name'].startsWith(capitalizeValue)) {
+          setState(() {
+            tempSearchStore.add(element);
+          });
+        }
+      });
+    }
+  }
 
   Position _position;
   double myLatitude, myLongitude;
@@ -46,7 +73,6 @@ class _SubjectsListState extends State<SubjectsList> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _positionStream.cancel();
   }
@@ -61,6 +87,19 @@ class _SubjectsListState extends State<SubjectsList> {
   Widget build(BuildContext context) {
     //returning list of subjects
     return Scaffold(
+      appBar: AppBar(
+        title: Text('I want a teacher for...'),
+        elevation: 0.0,
+        actions: <Widget>[
+          FlatButton.icon(
+            onPressed: () async {
+              await _auth.logOut();
+            },
+            icon: Icon(Icons.person),
+            label: Text('Logout'),
+          )
+        ],
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -78,6 +117,9 @@ class _SubjectsListState extends State<SubjectsList> {
                     borderRadius: BorderRadius.circular(15.0)),
                 child: Center(
                   child: TextField(
+                    onChanged: (val) {
+                      initiateSearch(val);
+                    },
                     decoration: InputDecoration(
                       hintText: "search for subject",
                       icon: Icon(
@@ -90,8 +132,22 @@ class _SubjectsListState extends State<SubjectsList> {
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: 10,
               ),
+              // GridView.count(
+              //   padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              //   crossAxisCount: 2,
+              //   crossAxisSpacing: 4.0,
+              //   mainAxisSpacing: 4.0,
+              //   primary: false,
+              //   shrinkWrap: true,
+              //   children: tempSearchStore.map<Widget>((element) {
+              //     return buildResultCard(element);
+              //   }).toList(),
+              // ),
+              // SizedBox(
+              //   height: 20.0,
+              // ),
               Container(
                 child: FutureBuilder(
                   future: getSubjects(),
@@ -146,31 +202,24 @@ class _SubjectsListState extends State<SubjectsList> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _navCurrentIndex,
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: Colors.green,
+    );
+  }
+
+  buildResultCard(data) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      elevation: 2.0,
+      child: Container(
+        child: Center(
+          child: Text(
+            data['subject_name'],
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0,
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: 'Messages',
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-            backgroundColor: Colors.green,
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _navCurrentIndex = index;
-          });
-        },
+        ),
       ),
     );
   }

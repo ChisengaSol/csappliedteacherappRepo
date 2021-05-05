@@ -2,7 +2,7 @@ var firebaseConfig = {
     apiKey: "AIzaSyAwKDlM4kV2HhuDGtIcn8iqFozcJ7aO3sk",
     authDomain: "csapplied-teacher-app-db.firebaseapp.com",
     projectId: "csapplied-teacher-app-db",
-    //storageBucket: "csapplied-teacher-app-db.appspot.com",
+    storageBucket: "csapplied-teacher-app-db.appspot.com",
     //messagingSenderId: "628599017742",
     appId: "1:628599017742:web:303ca8b1b79593a26a875f"
 };
@@ -48,11 +48,18 @@ if(userInfo){
             //     adminItems.forEach(item => item.style.display = "none");
             // }
             //get user info in the teachers collection using user id
+            var userName;
+            db.collection('teachers').doc(user.uid).get().then((snapshot) => {
+                userName = snapshot.data()["firstName"] + snapshot.data()["lastName"];
+             });
             const html =    `
                 <div>User email:  ${user.email}</div>
+                <div>User name:  ${userName}</div>
+
                 <div>${user.admin ? 'Admin' : ''}</div>
             `;
             userInfo.innerHTML = html;
+
         }
         //console.log(user);
     });
@@ -172,7 +179,7 @@ if(subjectlist){
                 lastname = doc.data()['lastName'];
                 teacher_school = doc.data()['school'];
                 teacher_email = doc.data()['userEmail'];
-                teacher_bio = doc.data()['bio'];
+                //teacher_bio = doc.data()['bio'];
             });
             db.collection('userlocations').where('userid', '==',user.uid).get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
@@ -192,10 +199,10 @@ if(subjectlist){
                     teacherName: firstname + " " + lastname,
                     teacher_lat: teacher_latitude,
                     teacher_long: teacher_longitude,
-                    teachersex: teacher_gender,
+                    //teachersex: teacher_gender,
                     teachermail: teacher_email,
                     teacherschool: teacher_school,
-                    teacherbio: teacher_bio,
+                    //teacherbio: teacher_bio,
                 });
         }
         });
@@ -322,6 +329,41 @@ const teachersList = document.querySelector("#teachers-id");
 if(teachersList){
     console.log("Display teachers here");
 }
+//function to send email to successful teacher
+function sendEmail(recieverEmail, receiverFname, recieverLname) {
+	Email.send({
+	Host: "smtp.gmail.com",
+	Username : "nearbyteacherfinder@gmail.com",
+	Password : "atn??@/552021",
+	To : recieverEmail,//`${recieverEmail}`,
+	From : "nearbyteacherfinder@gmail.com",
+	Subject : "Request Approved",
+	Body : `<div>Dear ${receiverFname} ${recieverLname},</div><br>
+            <div>Your request to use the Nearby Teacher Finder as a tutor has been approved. you
+            can now access other features of the system. Kindly log in to your account and update your details.</div>
+            <div>Regards,<br/>The Nearby Teacher Finder Team.</div> `,
+	}).then(
+		message => alert("mail sent successfully to: " + recieverEmail)
+	);
+}
+
+//rejected user
+function sendEmailRejected(recieverEmail, receiverFname, recieverLname) {
+	Email.send({
+	Host: "smtp.gmail.com",
+	Username : "nearbyteacherfinder@gmail.com",
+	Password : "atn??@/552021",
+	To : recieverEmail,//`${recieverEmail}`,
+	From : "nearbyteacherfinder@gmail.com",
+	Subject : "Request Declined",
+	Body : `<div>Dear ${receiverFname} ${recieverLname},</div><br>
+            <div>Your request to use the Nearby Teacher Finder as a tutor has been declined. This comes after cross-checking
+            the information you provided with the institution you provided.</div>
+            <div>Regards,<br/>The Nearby Teacher Finder Team.</div> `,
+	}).then(
+		message => alert("mail sent successfully to: " + recieverEmail)
+	);
+}
 
 const teacherRequests = document.querySelector("#requests-id");
 if(teacherRequests){
@@ -329,6 +371,7 @@ if(teacherRequests){
     function renderPendingTeachers(doc){
         let li = document.createElement('li');
         let teacherName = document.createElement('span');
+        let seeDetails = document.createElement('button');
         let reject = document.createElement('button');
         let approve = document.createElement('button');
 
@@ -336,14 +379,61 @@ if(teacherRequests){
         li.setAttribute('data-id', doc.id);
         var fullName = doc.data().firstName + " " + doc.data().lastName;
         teacherName.textContent = fullName;
+        seeDetails.textContent = "Details";
         approve.textContent = "Approve";
         reject.textContent = "Reject";
     
         li.appendChild(teacherName);
+        li.appendChild(seeDetails)
         li.appendChild(approve);
         li.appendChild(reject);
     
         teacherRequests.appendChild(li);
+        seeDetails.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let id = e.target.parentElement.getAttribute('data-id');
+            togglePopup();
+
+            const pendingDetails = document.querySelector('#pending-details');
+            function renderRequestDetails(doc){
+                
+                let div = document.createElement('div');
+                let school = document.createElement('div');
+                let email = document.createElement('div');
+                let schoolAddress = document.createElement('div');
+                let schoolTel = document.createElement('div');
+                let subject = document.createElement('div');
+                let userEmail = document.createElement('div');
+            
+                div.setAttribute('data-id',doc.id);
+                school.textContent = "School: " + doc.data().school;
+                email.textContent = "School Email: " + doc.data().schoolEmail;
+                schoolAddress.textContent = "School Address: " + doc.data().schoolAddress;
+                schoolTel.textContent = "School Tel: " + doc.data().schoolTel;
+                subject.textContent = "Teacher subject: " + doc.data().subject;
+                userEmail.textContent = "Teacher Email: " + doc.data().usermail;
+            
+                div.appendChild(school);
+                div.appendChild(email);
+                div.appendChild(schoolAddress);
+                div.appendChild(schoolTel);
+                div.appendChild(subject);
+                div.appendChild(userEmail);
+            
+                pendingDetails.appendChild(div);
+                
+            
+            }
+            db.collection('pendingaccounts').doc(id).get().then((snapshot) => {
+               
+                    //renderConvos(doc);
+                    //console.log(snapshot.data());
+                    renderRequestDetails(snapshot);
+                
+                
+            });
+
+        });
     
     
         //approving teachers
@@ -365,18 +455,8 @@ if(teacherRequests){
             });
             if(fname != null){
                 console.log(doc.data());
-                //sendEmail(usermail, fname, lname);
-                Email.send({
-                    Host: "smtp.gmail.com",
-                    Username : "zambezimusiccache@gmail.com",
-                    Password : "@ynot2021",
-                    To : usermail,
-                    From : "zambezimusiccache@gmail.com",
-                    Subject : "Request Approved",
-                    Body : `Dear ${fname} ${lname},\nThank you for the request to be nearby Teacher.`,
-                    }).then(
-                        message => alert("mail sent successfully to" + usermail)
-                    );
+                sendEmail(usermail, fname, lname);
+                
                 db.collection('teachers').doc(id).set({
                     firstName: fname,
                     lastName: lname,
@@ -392,11 +472,12 @@ if(teacherRequests){
         });
     
         // //rejecting teachers
-        // reject.addEventListener('click',(e) => {
-        //     e.stopPropagation();
-        //     let id = e.target.parentElement.getAttribute('data-id');
-        //     db.collection('pendingaccounts').doc(id).delete();
-        // });
+        reject.addEventListener('click',(e) => {
+            e.stopPropagation();
+            sendEmailRejected(usermail, fname, lname);
+            let id = e.target.parentElement.getAttribute('data-id');
+            db.collection('pendingaccounts').doc(id).delete();
+        });
     
     }
     
@@ -485,9 +566,9 @@ if(logout){
     logout.addEventListener("click",(e) => {
         //e.preventDefault();
         auth.signOut().then(() => {
-            window.location.href = '/authentication.html';
+            window.location.href = '/index.html';
         });
-        alert("signed out");
+        //alert("signed out");
     });
 }
 
@@ -496,20 +577,7 @@ function togglePopup(){
 }
 
 
-//function to send email to successful teacher
-// function sendEmail(recieverEmail, receiverFname, recieverLname) {
-// 	Email.send({
-// 	Host: "smtp.gmail.com",
-// 	Username : "zambezimusiccache@gmail.com",
-// 	Password : "@ynot2021",
-// 	To : `${recieverEmail}`,
-// 	From : "zambezimusiccache@gmail.com",
-// 	Subject : "Request Approved",
-// 	Body : `Dear ${receiverFname} ${recieverLname},\nThank you for the request to be nearby Teacher.`,
-// 	}).then(
-// 		message => alert("mail sent successfully to" + recieverEmail)
-// 	);
-// }
+
 
 // function verificMail(params, pfname){
 //     var tempParams = {
@@ -544,15 +612,16 @@ function renderConvos(doc){
 const loginPopup = document.querySelector(".login-popup");
 const close = document.querySelector(".close");
 
+if(loginPopup){
+    window.addEventListener("load",function(){
 
-window.addEventListener("load",function(){
+    showPopup();
+    // setTimeout(function(){
+    //   loginPopup.classList.add("show");
+    // },5000)
 
- showPopup();
- // setTimeout(function(){
- //   loginPopup.classList.add("show");
- // },5000)
-
-})
+    });
+}
 
 function showPopup(){
       const timeLimit = 5 // seconds;
@@ -566,11 +635,13 @@ function showPopup(){
        console.log(i)
       },1000);
 }
+    if(close){
+        close.addEventListener("click",function(){
+            loginPopup.classList.remove("show");
+          });
+}
 
 
-close.addEventListener("click",function(){
-  loginPopup.classList.remove("show");
-})
 
 //get user's location
 const trackLocation = document.querySelector('#location-btn');
@@ -624,4 +695,181 @@ function toggleLocationPopup(){
       } else {
         theDiv.style.visibility = 'hidden';
       }
+}
+
+const profilePicView = document.querySelector("#id-profile-pic-view");
+const teacherDetailsId = document.querySelector("#update-info-view");
+let img = document.getElementById("img"),
+    profileUpdate = document.getElementById("profile-update");
+//updating user details
+
+
+// function updateTeacherDetails(){
+//     stopPropagation();
+//     //update profile db should come here
+//     // auth.onAuthStateChanged(user => {
+//     //     firebase.storage().ref('updatedTeacherDetails/' + user.uid + '/profile.jpg').put(file).then(function(){
+//     //         console.log("successfully uploaded");
+//     //     }).catch(err => {
+//     //         console.log(err.message);
+//     //     });;
+//     // });
+//     //alert("Funny bitch");
+//     console.log("Funny I lost my drive when I lost card");
+
+// }
+let file = {};
+function chooseFile(e){
+    file = e.target.files[0];
+}
+if(teacherDetailsId){
+    teacherDetailsId.addEventListener('click', (e) => {
+        e.preventDefault();
+        //update profile db should come here
+        auth.onAuthStateChanged(user => {
+            firebase.storage().ref('updatedTeacherDetails/' + user.uid + file.name).put(file).then(function(){
+                console.log("successfully uploaded");
+            }).catch(err => {
+                console.log(err.message);
+            });;
+        });
+        //console.log("Funny bitch");
+    });
+}
+
+//get user profile picture
+auth.onAuthStateChanged(user => {
+    if(user){
+        firebase.storage().ref('updatedTeacherDetails/' + user.uid + file.name).getDownloadURL().then(imgUrl => {
+            console.log(imgUrl);
+            console.log("File name is" + file.name);
+            img.src = imgUrl;
+        });
+    }
+});
+
+//display teachers 
+const teachersId = document.querySelector("#teachers-id");
+if(teachersId){
+    function renderTeachers(doc){
+        let li = document.createElement('li');
+        let teacherName = document.createElement('span');
+        let arrow_forward = document.createElement('div');
+
+        li.setAttribute('data-id',doc.id);
+        teacherName.textContent = doc.data().firstName + " " + doc.data().lastName;
+        arrow_forward.textContent = '>';
+
+        li.appendChild(teacherName);
+        li.appendChild(arrow_forward);
+
+        teachersId.appendChild(li);
+
+        //displaying teachers info
+        arrow_forward.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let id = e.target.parentElement.getAttribute('data-id');
+            togglePopup();
+
+            const techerDetails = document.querySelector('#teacher-details');
+            function renderTeacherDetails(doc){
+                
+                let div = document.createElement('div');
+                let school = document.createElement('div');
+                let email = document.createElement('div');
+            
+                div.setAttribute('data-id',doc.id);
+                school.textContent = "School: " + doc.data().school;
+                email.textContent = "Email: " + doc.data().userEmail ;
+            
+                div.appendChild(school);
+                div.appendChild(email);
+            
+                techerDetails.appendChild(div);
+                
+            
+            }
+            db.collection('teachers').doc(id).get().then((snapshot) => {
+               
+                    //renderConvos(doc);
+                    //console.log(snapshot.data());
+                    renderTeacherDetails(snapshot);
+                
+                
+            });
+
+        });
+
+        
+    }
+    db.collection('teachers').get().then((snapshot) =>{
+        snapshot.docs.forEach(doc => {
+            //console.log(doc.data());
+            renderTeachers(doc);
+        })
+    })
+
+}
+
+//pupils details
+const pupilsId = document.querySelector("#pupils-id");
+if(pupilsId){
+    function renderPupils(doc){
+        let li = document.createElement('li');
+        let pupilName = document.createElement('span');
+        let arrow_forward = document.createElement('div');
+
+        li.setAttribute('data-id',doc.id);
+        pupilName.textContent = doc.data().fname + " " + doc.data().lname;
+        arrow_forward.textContent = '>';
+
+        li.appendChild(pupilName);
+        li.appendChild(arrow_forward);
+
+        pupilsId.appendChild(li);
+
+        //displaying teachers info
+        arrow_forward.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let id = e.target.parentElement.getAttribute('data-id');
+            togglePopup();
+
+            const techerDetails = document.querySelector('#pupil-details');
+            function renderPupilDetails(doc){
+                
+                let div = document.createElement('div');
+                let school = document.createElement('div');
+                let email = document.createElement('div');
+            
+                div.setAttribute('data-id',doc.id);
+                school.textContent = "School: " + doc.data().company;
+                email.textContent = "Email: " + doc.data().userId;
+            
+                div.appendChild(school);
+                div.appendChild(email);
+            
+                techerDetails.appendChild(div);
+                
+            
+            }
+            db.collection('tutors').doc(id).get().then((snapshot) => {
+               
+                    //renderConvos(doc);
+                    //console.log(snapshot.data());
+                    renderPupilDetails(snapshot);
+                
+                
+            });
+
+        });
+
+        
+    }
+    db.collection('tutors').get().then((snapshot) =>{
+        snapshot.docs.forEach(doc => {
+            //console.log(doc.data());
+            renderPupils(doc);
+        })
+    })
+
 }

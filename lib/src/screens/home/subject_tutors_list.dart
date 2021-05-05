@@ -118,26 +118,29 @@ class _TeachersListState extends State<TeachersList> {
 
                       //returning teachers only within the range of 5Km
                       if (teacherDistance < 4) {
-                        return ListTile(
-                          key: ValueKey("teachersKey"),
-                          leading: Image(
-                            image: NetworkImage(
-                                'https://xenforo.com/community/data/avatars/o/202/202502.jpg'),
-                          ),
-                          title: Text(
-                            snapshot.data[index].data()["teacherName"],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
+                        return Card(
+                          child: ListTile(
+                            key: ValueKey("teachersKey"),
+                            leading: Image(
+                              image: NetworkImage(
+                                  'https://xenforo.com/community/data/avatars/o/202/202502.jpg'),
                             ),
+                            title: Text(
+                              snapshot.data[index].data()["teacherName"],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                              ),
+                            ),
+                            subtitle: Text(
+                                "${teacherDistance.toStringAsFixed(2)} Km away from your location"),
+                            trailing: Icon(
+                              Icons.keyboard_arrow_right,
+                              size: 30.0,
+                            ),
+                            onTap: () =>
+                                navigateToDetails(snapshot.data[index]),
                           ),
-                          subtitle: Text(
-                              "${teacherDistance.toStringAsFixed(2)} Km away from your location"),
-                          trailing: Icon(
-                            Icons.keyboard_arrow_right,
-                            size: 30.0,
-                          ),
-                          onTap: () => navigateToDetails(snapshot.data[index]),
                         );
                       }
                     });

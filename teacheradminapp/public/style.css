@@ -9,7 +9,7 @@
 .hero{
 	height: 100%;
 	width: 100%;
-	background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url(book-with-green-board-background.JPG);
+	background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url(/public/book-with-green-board-background.JPG);
 	background-position: center;
 	background-size: cover;
 	position: absolute;
@@ -205,6 +205,15 @@ header{
 	padding: 10px;
 }
 .center-div button:nth-child(2){
+	color: black;
+	position: absolute;
+    right: 180px;
+    /* top:  */
+	/* height: 35px; */
+	
+	padding: 10px;
+}
+.center-div button:nth-child(3){
 	color: #00b712;
 	position: absolute;
     right: 100px;
